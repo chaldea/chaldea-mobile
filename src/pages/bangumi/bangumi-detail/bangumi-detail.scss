@@ -1,0 +1,21 @@
+page-bangumi-detail {
+  ion-segment {
+    background-color: $content-bg-color;
+  }
+  .scroll-content {
+    background-color: $page-bg-color;
+  }
+  .segment-ios-primary .segment-button.segment-activated {
+    background-color: #DDD;
+  }
+  .info {
+    height: 200px;
+    background-color: rgb(194, 184, 182);
+  }
+  .desc {
+    background-color: $content-bg-color;
+    height: 50px;
+    line-height: 25px;
+    border-bottom: 1px solid #DDD;
+  }
+}

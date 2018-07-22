@@ -1,0 +1,22 @@
+page-bangumi {
+  ion-slides {
+    height: 200px;
+  }
+  .scroll-content {
+    background-color: $page-bg-color;
+  }
+  // .swiper-pagination {
+  //   text-align: right;
+  //   padding-right: 10px;
+  // }
+  .card {
+    background-color: $content-bg-color;
+    padding: 0px 5px;
+    margin: 0px 0px 10px 0px;
+    .title {
+      padding-left: 5px;
+      max-height: 30px;
+      line-height: 30px;
+    }
+  }
+}
