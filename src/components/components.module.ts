@@ -4,13 +4,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ComicComponent } from './comic/comic';
 import { NovelComponent } from './novel/novel';
 import { CommentComponent } from './comment/comment';
+import { PlayerComponent } from './player/player';
 
 @NgModule({
   declarations: [
     AnimeComponent,
     ComicComponent,
     NovelComponent,
-    CommentComponent
+    CommentComponent,
+    PlayerComponent
   ],
   imports: [
     BrowserModule
@@ -19,7 +21,11 @@ import { CommentComponent } from './comment/comment';
     AnimeComponent,
     ComicComponent,
     NovelComponent,
-    CommentComponent
+    CommentComponent,
+    PlayerComponent
+  ],
+  entryComponents: [
+    PlayerComponent
   ]
 })
 export class ComponentsModule {

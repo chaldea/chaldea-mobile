@@ -1,9 +1,25 @@
 <div>
-  <div>
-    <div>评论区</div>
-    <div>
-      <div></div>
-      <div></div>
+  <div class="comment">
+    <div class="title">评论区</div>
+    <div class="thumbnail" *ngFor="let item of items">
+      <div class="stable">
+        <div class="avatar"></div>
+      </div>
+      <div class="wrapper">
+        <div class="header">
+          <div class="auth">{{item.auth}}</div>
+          <div class="level">#{{item.level}}</div>
+          <div class="date">{{item.date}}</div>
+        </div>
+        <div class="content">
+          {{item.comment}}
+        </div>
+        <div class="footer">
+          <div>回复</div>
+          <div>点赞</div>
+          <div>点赞</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

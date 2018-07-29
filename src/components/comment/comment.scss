@@ -1,1 +1,56 @@
-comment {}
+comment {
+    .comment {
+        background-color: $content-bg-color;
+        min-height: calc(100vh - 510px);
+
+        .title {
+            padding-left: 10px;
+            min-height: 30px;
+            line-height: 30px;
+            text-align: left;
+            @extend %border-normal-bottom;
+        }
+
+        .thumbnail {
+            min-height: 120px;
+            width: 100%;
+            display: flex;
+            flex-flow: row;
+            padding: 10px;
+            @extend %border-normal-bottom;
+            .stable {
+                width:80px;
+                display: flex;
+                justify-content: center;
+                .avatar{
+                    height: 64px;
+                    width: 64px;
+                    border: 1px solid #DDD;
+                    border-radius: 50%;
+                }
+            }
+
+            .wrapper {
+                padding-left: 10px;
+                flex:1;
+                display: flex;
+                flex-flow: column;
+                .header {
+                    height: 20px;
+                    display: flex;
+                    flex-flow: row;
+                }
+                .content{
+                    flex: 1;
+                    display: flex;
+                    flex-flow: row;
+                }
+                .footer {
+                    height: 20px;
+                    display: flex;
+                    flex-flow: row;
+                }
+            }
+        }
+    }
+}

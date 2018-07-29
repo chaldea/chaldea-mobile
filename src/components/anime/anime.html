@@ -4,7 +4,7 @@
       选集
     </div>
     <div class="slice">
-      <div class="item" *ngFor="let item of items">{{item.name}}</div>
+      <div class="item" *ngFor="let item of items" (click)="play()">{{item.name}}</div>
     </div>
   </div>
 </div>

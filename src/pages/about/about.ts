@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ModalController } from 'ionic-angular';
+import { PlayerComponent } from '../../components/player/player';
 
 @Component({
   selector: 'page-about',
@@ -7,8 +8,12 @@ import { NavController } from 'ionic-angular';
 })
 export class AboutPage {
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, public modalCtrl: ModalController) {
 
   }
 
+  play(): void {
+    const profileModal = this.modalCtrl.create(PlayerComponent, { userId: 8675309 });
+    profileModal.present();
+  }
 }

@@ -1,0 +1,16 @@
+player {
+    .player {
+        width: 100vw;
+        height: 100vh;
+        .video {
+            background-color: #c2b8b6;
+            width: 100vw;
+            height: 100vh;
+        }
+        .control {
+            height: 30px;
+            opacity: 0;
+            margin-top: -35px;
+        }
+    }
+}
