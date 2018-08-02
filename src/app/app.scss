@@ -3,55 +3,66 @@ $page-bg-color: #efefef; // 网页整体背景色
 $content-bg-color:#ffffff; // 网页模块内容背景色
 // 网页默认的边框
 %border-normal {
-  border: 1px solid #DDD;
+    border: 1px solid #DDD;
 }
 
 %border-normal-bottom {
-  border-bottom: 1px solid #DDD;
+    border-bottom: 1px solid #DDD;
+}
+
+%default-font {
+    font-weight: 400;
+    font-size: 12px;
+    font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", FontAwesome, sans-serif;
 }
 
 // 空行10px-50px
 @for $i from 1 to 5 {
-  .blank-#{$i * 10} {
-    height: #{$i * 10}px;
-  }
+    .blank-#{$i * 10} {
+        height: #{$i * 10}px;
+    }
+}
+
+* {
+    @extend %default-font;
 }
 
 // 默认flex-box
 .box {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  .box-item {
-    min-height: 150px;
-    margin: 5px;
-    min-width: 120px;
-    @extend %border-normal;
-  }
-}
-
-.section {
-  background-color: $content-bg-color;
-  min-height: 160px;
-  padding: 5px;
-  .title {
-    height: 30px;
-    line-height: 30px;
-    padding-left: 5px;
-    border-bottom: 1px solid #DDD;
-  }
-  .slice {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    .item {
-      min-height: 30px;
-      line-height: 30px;
-      text-align: center;
-      margin: 5px;
-      min-width: 90px;
-      border-radius: 5px;
-      @extend %border-normal;
+    justify-content: space-around;
+    .box-item {
+        height: 180px;
+        width: calc(90% / 3);
+        flex: 1 1 1;
+        margin-bottom: 5px;
     }
-  }
+}
+
+.section {
+    background-color: $content-bg-color;
+    min-height: 160px;
+    padding: 5px;
+    .title {
+        height: 30px;
+        line-height: 30px;
+        padding-left: 5px;
+        border-bottom: 1px solid #DDD;
+    }
+    .slice {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        .item {
+            min-height: 30px;
+            line-height: 30px;
+            text-align: center;
+            margin: 5px;
+            min-width: 90px;
+            border-radius: 5px;
+            @extend %border-normal;
+        }
+    }
 }

@@ -12,38 +12,39 @@ export class BangumiPage {
   data: Array<any> = [];
 
   constructor(public navCtrl: NavController) {
+    const baseUrl = "/assets/imgs/covers";
     this.data.push({
-      date: "2017年7月",
+      date: "2018年7月",
       animes: [{
-        img: "xxxx.jpg",
-        title: "魔法禁书目录"
+        img: `${baseUrl}/001.jpg`,
+        title: "Phantom in the Twilight"
       }, {
-        img: "xxxx.jpg",
-        title: "魔法禁书目录"
+        img: `${baseUrl}/002.jpg`,
+        title: "Free男子游泳部第三季"
       }, {
-        img: "xxxx.jpg",
-        title: "魔法禁书目录"
+        img: `${baseUrl}/003.jpg`,
+        title: "烤肉店战国"
       }, {
-        img: "xxxx.jpg",
-        title: "魔法禁书目录"
+        img: `${baseUrl}/004.jpg`,
+        title: "深夜！天才傻鹏"
       }, {
-        img: "xxxx.jpg",
-        title: "魔法禁书目录"
+        img: `${baseUrl}/005.jpg`,
+        title: "元寇合战记"
       }, {
-        img: "xxxx.jpg",
-        title: "魔法禁书目录"
+        img: `${baseUrl}/006.jpg`,
+        title: "中间管理录利根川"
       }]
     }, {
-        date: "2017年4月",
+        date: "2018年4月",
         animes: [{
-          img: "xxxx.jpg",
-          title: "魔法禁书目录"
+          img: `${baseUrl}/007.jpg`,
+          title: "后街女孩"
         }, {
-          img: "xxxx.jpg",
-          title: "魔法禁书目录"
+          img: `${baseUrl}/008.jpg`,
+          title: "千铳士"
         }, {
-          img: "xxxx.jpg",
-          title: "魔法禁书目录"
+          img: `${baseUrl}/009.jpg`,
+          title: "OVERLORD"
         }]
       });
   }
