@@ -8,7 +8,7 @@ import { BangumiDetailPage } from './bangumi-detail/bangumi-detail';
   templateUrl: 'bangumi.html'
 })
 export class BangumiPage {
-  @ViewChild(Slides) slides: Slides;
+  @ViewChild("slides") slides: Slides;
   data: Array<any> = [];
 
   constructor(public navCtrl: NavController) {
@@ -49,11 +49,23 @@ export class BangumiPage {
       });
   }
 
+  ionViewDidEnter(): void {
+    this.slides.startAutoplay();
+  }
+
+  ionViewWillLeave(): void {
+    this.slides.stopAutoplay();
+  }
+
   showBangumiList(): void {
     this.navCtrl.push(BangumiListPage);
   }
 
   showBangumiDetail(): void {
     this.navCtrl.push(BangumiDetailPage);
+  }
+
+  ionSlideAutoplayStop(): void {
+    this.slides.startAutoplay();
   }
 }

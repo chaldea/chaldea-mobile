@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-slides autoplay="3000" speed="500" loop pager>
+  <ion-slides #slides autoplay="3000" speed="500" loop pager (ionSlideAutoplayStop)="ionSlideAutoplayStop()">
     <ion-slide>
       <img src="/assets/imgs/slides/001.jpg" alt="">
     </ion-slide>

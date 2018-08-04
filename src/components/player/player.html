@@ -1,5 +1,28 @@
 <div class="player">
-    <video class="video" autoplay>
-        <source src="./assets/videos/sample.mp4" />
+    <video #video class="video" [attr.src]="src" (timeupdate)="seek()" (ended)="stopped()">
     </video>
+    <div class="control-title">
+        <div class="back" (click)="goBack()">
+            <ion-icon ios="ios-arrow-back" md="ios-arrow-back"></ion-icon>
+        </div>
+        <div class="title">
+            {{title}}
+        </div>
+    </div>
+    <div class="control">
+        <div class="progress-bar">
+            <input #progressBar type="range" value="0" (input)="beginChange()" (change)="endChange()">
+        </div>
+        <div class="control-bar">
+            <div class="play">
+                <ion-icon [name]="paused ? 'ios-play' : 'ios-pause'" (click)="play()"></ion-icon>
+            </div>
+            <div class="time">
+                00:00/10:42
+            </div>
+            <div class="danmaku">
+                <ion-icon ios="ios-list-box" md="md-list-box"></ion-icon>
+            </div>
+        </div>
+    </div>
 </div>

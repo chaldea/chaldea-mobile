@@ -5,6 +5,8 @@ import { ComicComponent } from './comic/comic';
 import { NovelComponent } from './novel/novel';
 import { CommentComponent } from './comment/comment';
 import { PlayerComponent } from './player/player';
+import { IonicModule } from 'ionic-angular';
+import { MyApp } from '../app/app.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,8 @@ import { PlayerComponent } from './player/player';
     PlayerComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    IonicModule.forRoot(MyApp)
   ],
   exports: [
     AnimeComponent,

@@ -10,7 +10,6 @@ export class AnimeComponent {
   items: Array<any> = [];
 
   constructor(public modalCtrl: ModalController) {
-    console.log('binding....');
     for (var i = 0; i < 12; i++) {
       this.items.push({ name: `第${i + 1}话` });
     }
@@ -18,7 +17,13 @@ export class AnimeComponent {
   }
 
   play(): void {
-    const profileModal = this.modalCtrl.create(PlayerComponent, { userId: 8675309 });
+    const profileModal = this.modalCtrl.create(PlayerComponent, {
+      src: "/assets/videos/sample.mp4",
+      title: "测试标题"
+    }, {
+        showBackdrop: false
+      }
+    );
     profileModal.present();
   }
 }

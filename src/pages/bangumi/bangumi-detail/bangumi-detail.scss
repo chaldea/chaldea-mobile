@@ -1,21 +1,54 @@
 page-bangumi-detail {
-  ion-segment {
-    background-color: $content-bg-color;
-  }
-  .scroll-content {
-    background-color: $page-bg-color;
-  }
-  .segment-ios-primary .segment-button.segment-activated {
-    background-color: #DDD;
-  }
-  .info {
-    height: 200px;
-    background-color: rgb(194, 184, 182);
-  }
-  .desc {
-    background-color: $content-bg-color;
-    height: 50px;
-    line-height: 25px;
-    border-bottom: 1px solid #DDD;
-  }
+    ion-segment {
+        background-color: $content-bg-color;
+    }
+    .scroll-content {
+        background-color: $page-bg-color;
+    }
+    .segment-ios-primary .segment-button.segment-activated {
+        background-color: #DDD;
+    }
+    .info {
+        height: 200px;
+        background-color: rgb(194, 184, 182);
+    }
+    .desc {
+        background-color: $content-bg-color;
+        height: 50px;
+        line-height: 25px;
+        border-bottom: 1px solid #DDD;
+    }
+    .reply {
+        width: 100%;
+        line-height: 30px;
+        height: 30px;
+        background-color: #fafafa;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        .left,
+        .right {
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            ion-icon {
+                font-size: 23px;
+                color: #9a9a9a;
+            }
+        }
+        .middle {
+            flex-grow: 1;
+            input {
+                outline: none;
+                -webkit-appearance: none;
+                height: 25px;
+                border-radius: 10px;
+                width: 100%;
+                padding-left: 5px;
+                border: 1px solid #e5e5e5;
+                background-color: #f4f4f4;
+            }
+        }
+    }
 }
