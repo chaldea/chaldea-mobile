@@ -1,11 +1,18 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>2017年7月</ion-title>
+    <ion-title>{{bangumi.name}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <div class="box">
-    <div class="box-item" *ngFor="let anime of animes"></div>
+    <div class="box-item" *ngFor="let anime of animes" (click)="showBangumiDetail()">
+      <div class="cover">
+        <img [src]="coverUrl + anime.cover" alt="">
+      </div>
+      <div class="subtitle">
+        {{anime.title}}
+      </div>
+    </div>
   </div>
 </ion-content>

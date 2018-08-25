@@ -17,14 +17,14 @@
     </ion-slide>
   </ion-slides>
 
-  <div class="card" *ngFor="let bangumi of data">
-    <div class="title" (click)="showBangumiList()">
-      {{bangumi.date}}
+  <div class="card" *ngFor="let bangumi of bangumis">
+    <div class="title" (click)="showAnimeList(bangumi)">
+      {{bangumi.name}}
     </div>
     <div class="box">
       <div class="box-item" *ngFor="let anime of bangumi.animes" (click)="showBangumiDetail()">
         <div class="cover">
-          <img [src]="anime.img" alt="">
+          <img [src]="coverUrl + anime.cover" alt="">
         </div>
         <div class="subtitle">
           {{anime.title}}
@@ -32,4 +32,8 @@
       </div>
     </div>
   </div>
+
+  <ion-infinite-scroll (ionInfinite)="loading($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

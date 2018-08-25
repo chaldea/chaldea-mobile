@@ -1,52 +1,47 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Injector, OnInit } from '@angular/core';
 import { NavController, Slides } from 'ionic-angular';
 import { BangumiListPage } from './bangumi-list/bangumi-list';
 import { BangumiDetailPage } from './bangumi-detail/bangumi-detail';
+import { BangumiServiceProxy, Bangumi } from '../../shared/service-proxies/service-proxies';
+import { BasePage } from '../base-page';
+import { AppConsts } from '../../shared/AppConsts';
 
 @Component({
   selector: 'page-bangumi',
   templateUrl: 'bangumi.html'
 })
-export class BangumiPage {
+export class BangumiPage extends BasePage implements OnInit {
   @ViewChild("slides") slides: Slides;
-  data: Array<any> = [];
+  bangumis: Bangumi[] = [];
+  coverUrl = `${AppConsts.appBaseUrl}/statics/imgs/`;
+  limit = 4;
+  disableLoading = false;
 
-  constructor(public navCtrl: NavController) {
-    const baseUrl = "/assets/imgs/covers";
-    this.data.push({
-      date: "2018年7月",
-      animes: [{
-        img: `${baseUrl}/001.jpg`,
-        title: "Phantom in the Twilight"
-      }, {
-        img: `${baseUrl}/002.jpg`,
-        title: "Free男子游泳部第三季"
-      }, {
-        img: `${baseUrl}/003.jpg`,
-        title: "烤肉店战国"
-      }, {
-        img: `${baseUrl}/004.jpg`,
-        title: "深夜！天才傻鹏"
-      }, {
-        img: `${baseUrl}/005.jpg`,
-        title: "元寇合战记"
-      }, {
-        img: `${baseUrl}/006.jpg`,
-        title: "中间管理录利根川"
-      }]
-    }, {
-        date: "2018年4月",
-        animes: [{
-          img: `${baseUrl}/007.jpg`,
-          title: "后街女孩"
-        }, {
-          img: `${baseUrl}/008.jpg`,
-          title: "千铳士"
-        }, {
-          img: `${baseUrl}/009.jpg`,
-          title: "OVERLORD"
-        }]
-      });
+  constructor(
+    injector: Injector,
+    public bangumiServiceProxy: BangumiServiceProxy,
+    public navCtrl: NavController
+  ) {
+    super(injector);
+  }
+
+  ngOnInit(): void {
+    this.getList();
+  }
+
+  getList(callback?: () => void): void {
+    const self = this;
+    self.bangumiServiceProxy.getlist(self.bangumis.length, self.limit).subscribe((rep) => {
+      if (rep && rep.length > 0) {
+        self.disableLoading = false;
+        self.bangumis = self.bangumis.concat(rep);
+      }
+      else {
+        self.disableLoading = true;
+      }
+
+      if (callback) callback();
+    });
   }
 
   ionViewDidEnter(): void {
@@ -57,8 +52,8 @@ export class BangumiPage {
     this.slides.stopAutoplay();
   }
 
-  showBangumiList(): void {
-    this.navCtrl.push(BangumiListPage);
+  showAnimeList(bangumi: Bangumi): void {
+    this.navCtrl.push(BangumiListPage, { bangumi: bangumi });
   }
 
   showBangumiDetail(): void {
@@ -67,5 +62,18 @@ export class BangumiPage {
 
   ionSlideAutoplayStop(): void {
     this.slides.startAutoplay();
+  }
+
+  loading(infiniteScroll): void {
+    const self = this;
+    if (self.disableLoading) {
+      infiniteScroll.enable(false);
+      console.log('已经到最后');
+      return;
+    }
+    self.getList(() => {
+      console.log('loading...');
+      infiniteScroll.complete();
+    });
   }
 }
