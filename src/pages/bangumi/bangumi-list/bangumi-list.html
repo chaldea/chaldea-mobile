@@ -5,6 +5,7 @@
 </ion-header>
 
 <ion-content>
+  <div class="blank-10"></div>
   <div class="box">
     <div class="box-item" *ngFor="let anime of animes" (click)="showBangumiDetail()">
       <div class="cover">
@@ -15,4 +16,8 @@
       </div>
     </div>
   </div>
+
+  <ion-infinite-scroll (ionInfinite)="loading($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

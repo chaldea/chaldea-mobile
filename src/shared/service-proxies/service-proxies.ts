@@ -35,12 +35,18 @@ export class AnimeServiceProxy {
 
     /**
      * @bangumiId (optional) 
+     * @skip (optional) 
+     * @take (optional) 
      * @return Success
      */
-    getlist(bangumiId: string | null): Observable<Anime[]> {
+    getlist(bangumiId: string | null, skip: number | null, take: number | null): Observable<Anime[]> {
         let url_ = this.baseUrl + "/api/anime/getlist?";
         if (bangumiId !== undefined)
             url_ += "bangumiId=" + encodeURIComponent("" + bangumiId) + "&"; 
+        if (skip !== undefined)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&"; 
+        if (take !== undefined)
+            url_ += "take=" + encodeURIComponent("" + take) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
