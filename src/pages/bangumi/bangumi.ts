@@ -2,7 +2,7 @@ import { Component, ViewChild, Injector, OnInit } from '@angular/core';
 import { NavController, Slides } from 'ionic-angular';
 import { BangumiListPage } from './bangumi-list/bangumi-list';
 import { BangumiDetailPage } from './bangumi-detail/bangumi-detail';
-import { BangumiServiceProxy, Bangumi } from '../../shared/service-proxies/service-proxies';
+import { BangumiServiceProxy, Bangumi, Anime, BannerServiceProxy, Banner } from '../../shared/service-proxies/service-proxies';
 import { BasePage } from '../base-page';
 import { AppConsts } from '../../shared/AppConsts';
 
@@ -13,13 +13,16 @@ import { AppConsts } from '../../shared/AppConsts';
 export class BangumiPage extends BasePage implements OnInit {
   @ViewChild("slides") slides: Slides;
   bangumis: Bangumi[] = [];
-  coverUrl = `${AppConsts.appBaseUrl}/statics/imgs/`;
+  banners: Banner[] = [];
+  coverUrl = `${AppConsts.appBaseUrl}/statics/imgs/covers/`;
+  bannerUrl = `${AppConsts.appBaseUrl}/statics/imgs/banners/`;
   limit = 4;
   disableLoading = false;
 
   constructor(
     injector: Injector,
     public bangumiServiceProxy: BangumiServiceProxy,
+    public bannerServiceProxy: BannerServiceProxy,
     public navCtrl: NavController
   ) {
     super(injector);
@@ -27,6 +30,7 @@ export class BangumiPage extends BasePage implements OnInit {
 
   ngOnInit(): void {
     this.getList();
+    this.getBanners();
   }
 
   getList(callback?: () => void): void {
@@ -44,25 +48,37 @@ export class BangumiPage extends BasePage implements OnInit {
     });
   }
 
-  ionViewDidEnter(): void {
-    this.slides.startAutoplay();
+  getBanners(): void {
+    const self = this;
+    self.bannerServiceProxy.getList(0, 3).subscribe((rep) => {
+      self.banners = rep;
+      // this.slides.startAutoplay();
+    });
   }
 
-  ionViewWillLeave(): void {
-    this.slides.stopAutoplay();
-  }
+  // ngAfterViewInit() {
+  //   this.slides.startAutoplay();
+  // }
 
-  showAnimeList(bangumi: Bangumi): void {
+  // ionViewDidEnter(): void {
+  //   this.slides.startAutoplay();
+  // }
+
+  // ionViewWillLeave(): void {
+  //   this.slides.stopAutoplay();
+  // }
+
+  showBangumiList(bangumi: Bangumi): void {
     this.navCtrl.push(BangumiListPage, { bangumi: bangumi });
   }
 
-  showBangumiDetail(): void {
-    this.navCtrl.push(BangumiDetailPage);
+  showBangumiDetail(anime: Anime): void {
+    this.navCtrl.push(BangumiDetailPage, { anime: anime });
   }
 
-  ionSlideAutoplayStop(): void {
-    this.slides.startAutoplay();
-  }
+  // ionSlideAutoplayStop(): void {
+  //   this.slides.startAutoplay();
+  // }
 
   loading(infiniteScroll): void {
     const self = this;

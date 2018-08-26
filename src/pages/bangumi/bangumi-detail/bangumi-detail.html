@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>魔法禁书目录</ion-title>
+    <ion-title>{{title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -11,7 +11,7 @@
       <div class="staff"></div>
     </div>
     <div class="desc">
-      这里是动漫的简介信息。可以非常的长。。。。。。
+      {{animeDetail.desc}}
     </div>
 
     <ion-segment [(ngModel)]="segment" color="primary">
@@ -28,7 +28,7 @@
   </div>
 
   <div class="blank-10"></div>
-  <anime #anime [hidden]="segment!='anime'"></anime>
+  <anime #anime [hidden]="segment!='anime'" [resources]="animeDetail.animes"></anime>
   <comic #comic [hidden]="segment!='comic'"></comic>
   <novel #novel [hidden]="segment!='novel'"></novel>
 

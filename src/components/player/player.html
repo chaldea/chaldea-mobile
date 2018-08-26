@@ -1,7 +1,7 @@
 <div class="player">
-    <video #video class="video" [attr.src]="src" (timeupdate)="seek()" (ended)="stopped()">
+    <video #video class="video" [attr.src]="src" (timeupdate)="seek()" (ended)="stopped()" (click)="touch()">
     </video>
-    <div class="control-title">
+    <div class="control-title" [@controlTitle]="controlState">
         <div class="back" (click)="goBack()">
             <ion-icon ios="ios-arrow-back" md="ios-arrow-back"></ion-icon>
         </div>
@@ -9,7 +9,7 @@
             {{title}}
         </div>
     </div>
-    <div class="control">
+    <div class="control" [@control]="controlState">
         <div class="progress-bar">
             <input #progressBar type="range" value="0" (input)="beginChange()" (change)="endChange()">
         </div>
@@ -18,7 +18,7 @@
                 <ion-icon [name]="paused ? 'ios-play' : 'ios-pause'" (click)="play()"></ion-icon>
             </div>
             <div class="time">
-                00:00/10:42
+                {{currentTime}}/{{duration}}
             </div>
             <div class="danmaku">
                 <ion-icon ios="ios-list-box" md="md-list-box"></ion-icon>

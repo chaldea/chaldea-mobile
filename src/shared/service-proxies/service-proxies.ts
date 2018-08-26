@@ -88,6 +88,107 @@ export class AnimeServiceProxy {
         }
         return Observable.of<Anime[]>(<any>null);
     }
+
+    /**
+     * @animeId (optional) 
+     * @return Success
+     */
+    getdetail(animeId: string | null): Observable<AnimeDetail> {
+        let url_ = this.baseUrl + "/api/anime/getdetail?";
+        if (animeId !== undefined)
+            url_ += "animeId=" + encodeURIComponent("" + animeId) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetdetail(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetdetail(response_);
+                } catch (e) {
+                    return <Observable<AnimeDetail>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<AnimeDetail>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetdetail(response: HttpResponse<Blob>): Observable<AnimeDetail> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? AnimeDetail.fromJS(resultData200) : new AnimeDetail();
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<AnimeDetail>(<any>null);
+    }
+
+    /**
+     * @input (optional) 
+     * @return Success
+     */
+    addresource(input: AddResourceDto | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/anime/addresource";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("put", url_, options_).flatMap((response_ : any) => {
+            return this.processAddresource(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processAddresource(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processAddresource(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -158,6 +259,126 @@ export class BangumiServiceProxy {
             });
         }
         return Observable.of<Bangumi[]>(<any>null);
+    }
+}
+
+@Injectable()
+export class BannerServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @banner (optional) 
+     * @return Success
+     */
+    add(banner: Banner | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/banner/add";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(banner);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("put", url_, options_).flatMap((response_ : any) => {
+            return this.processAdd(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processAdd(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processAdd(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @skip (optional) 
+     * @take (optional) 
+     * @return Success
+     */
+    getList(skip: number | null, take: number | null): Observable<Banner[]> {
+        let url_ = this.baseUrl + "/api/banner/getList?";
+        if (skip !== undefined)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&"; 
+        if (take !== undefined)
+            url_ += "take=" + encodeURIComponent("" + take) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetList(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetList(response_);
+                } catch (e) {
+                    return <Observable<Banner[]>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<Banner[]>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetList(response: HttpResponse<Blob>): Observable<Banner[]> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(Banner.fromJS(item));
+            }
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<Banner[]>(<any>null);
     }
 }
 
@@ -264,6 +485,234 @@ export interface IAnime {
     id: string | undefined;
 }
 
+export class AnimeDetail implements IAnimeDetail {
+    animeId: string | undefined;
+    desc: string | undefined;
+    animes: Resource[] | undefined;
+    comics: Resource[] | undefined;
+    novels: Resource[] | undefined;
+    comments: Comment[] | undefined;
+    id: string | undefined;
+
+    constructor(data?: IAnimeDetail) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.animeId = data["animeId"];
+            this.desc = data["desc"];
+            if (data["animes"] && data["animes"].constructor === Array) {
+                this.animes = [];
+                for (let item of data["animes"])
+                    this.animes.push(Resource.fromJS(item));
+            }
+            if (data["comics"] && data["comics"].constructor === Array) {
+                this.comics = [];
+                for (let item of data["comics"])
+                    this.comics.push(Resource.fromJS(item));
+            }
+            if (data["novels"] && data["novels"].constructor === Array) {
+                this.novels = [];
+                for (let item of data["novels"])
+                    this.novels.push(Resource.fromJS(item));
+            }
+            if (data["comments"] && data["comments"].constructor === Array) {
+                this.comments = [];
+                for (let item of data["comments"])
+                    this.comments.push(Comment.fromJS(item));
+            }
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): AnimeDetail {
+        let result = new AnimeDetail();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["animeId"] = this.animeId;
+        data["desc"] = this.desc;
+        if (this.animes && this.animes.constructor === Array) {
+            data["animes"] = [];
+            for (let item of this.animes)
+                data["animes"].push(item.toJSON());
+        }
+        if (this.comics && this.comics.constructor === Array) {
+            data["comics"] = [];
+            for (let item of this.comics)
+                data["comics"].push(item.toJSON());
+        }
+        if (this.novels && this.novels.constructor === Array) {
+            data["novels"] = [];
+            for (let item of this.novels)
+                data["novels"].push(item.toJSON());
+        }
+        if (this.comments && this.comments.constructor === Array) {
+            data["comments"] = [];
+            for (let item of this.comments)
+                data["comments"].push(item.toJSON());
+        }
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IAnimeDetail {
+    animeId: string | undefined;
+    desc: string | undefined;
+    animes: Resource[] | undefined;
+    comics: Resource[] | undefined;
+    novels: Resource[] | undefined;
+    comments: Comment[] | undefined;
+    id: string | undefined;
+}
+
+export class Resource implements IResource {
+    uid: string | undefined;
+    name: string | undefined;
+    url: string | undefined;
+    id: string | undefined;
+
+    constructor(data?: IResource) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.uid = data["uid"];
+            this.name = data["name"];
+            this.url = data["url"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): Resource {
+        let result = new Resource();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["uid"] = this.uid;
+        data["name"] = this.name;
+        data["url"] = this.url;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IResource {
+    uid: string | undefined;
+    name: string | undefined;
+    url: string | undefined;
+    id: string | undefined;
+}
+
+export class Comment implements IComment {
+    content: string | undefined;
+    id: string | undefined;
+
+    constructor(data?: IComment) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.content = data["content"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): Comment {
+        let result = new Comment();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["content"] = this.content;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IComment {
+    content: string | undefined;
+    id: string | undefined;
+}
+
+export class AddResourceDto implements IAddResourceDto {
+    animeId: string | undefined;
+    sourceType: AddResourceDtoSourceType | undefined;
+    resources: Resource[] | undefined;
+
+    constructor(data?: IAddResourceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.animeId = data["animeId"];
+            this.sourceType = data["sourceType"];
+            if (data["resources"] && data["resources"].constructor === Array) {
+                this.resources = [];
+                for (let item of data["resources"])
+                    this.resources.push(Resource.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): AddResourceDto {
+        let result = new AddResourceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["animeId"] = this.animeId;
+        data["sourceType"] = this.sourceType;
+        if (this.resources && this.resources.constructor === Array) {
+            data["resources"] = [];
+            for (let item of this.resources)
+                data["resources"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IAddResourceDto {
+    animeId: string | undefined;
+    sourceType: AddResourceDtoSourceType | undefined;
+    resources: Resource[] | undefined;
+}
+
 export class Bangumi implements IBangumi {
     name: string | undefined;
     animes: Anime[] | undefined;
@@ -313,6 +762,59 @@ export interface IBangumi {
     name: string | undefined;
     animes: Anime[] | undefined;
     id: string | undefined;
+}
+
+export class Banner implements IBanner {
+    image: string | undefined;
+    link: string | undefined;
+    title: string | undefined;
+    id: string | undefined;
+
+    constructor(data?: IBanner) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.image = data["image"];
+            this.link = data["link"];
+            this.title = data["title"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): Banner {
+        let result = new Banner();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["image"] = this.image;
+        data["link"] = this.link;
+        data["title"] = this.title;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IBanner {
+    image: string | undefined;
+    link: string | undefined;
+    title: string | undefined;
+    id: string | undefined;
+}
+
+export enum AddResourceDtoSourceType {
+    _0 = 0, 
+    _1 = 1, 
+    _2 = 2, 
 }
 
 export class SwaggerException extends Error {

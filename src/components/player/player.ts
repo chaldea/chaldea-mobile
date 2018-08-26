@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, trigger, state, style, transition, animate } from '@angular/core';
 import { NavParams, NavController, Platform } from 'ionic-angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -10,7 +10,22 @@ export class VideoSource {
 
 @Component({
     selector: 'player',
-    templateUrl: 'player.html'
+    templateUrl: 'player.html',
+    animations: [
+        trigger('control', [
+            state('up', style({ height: '55px', display: 'flex' })),
+            state('down', style({ height: '0px', display: 'none' })),
+            transition('up => down', animate('300ms ease-in')),
+            transition('down => up', animate('300ms ease-out')),
+        ]),
+
+        trigger('controlTitle', [
+            state('up', style({ height: '30px', display: 'flex' })),
+            state('down', style({ height: '0px', display: 'none' })),
+            transition('up => down', animate('300ms ease-in')),
+            transition('down => up', animate('300ms ease-out')),
+        ])
+    ]
 })
 export class PlayerComponent implements AfterViewInit {
     @ViewChild('video') videoRef: ElementRef;
@@ -19,8 +34,14 @@ export class PlayerComponent implements AfterViewInit {
     progressBar: HTMLInputElement;
     src: string;
     title: string;
+    duration: string;
+    currentTime: string;
     paused = true;
-    change = false;
+    changing = false;
+    autoplay = true;
+    controlState = 'up';
+    slidedownHandle: number;
+    autoSlideTime = 5000;
 
     constructor(
         public navCtrl: NavController,
@@ -40,6 +61,25 @@ export class PlayerComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.video = <HTMLVideoElement>this.videoRef.nativeElement;
         this.progressBar = <HTMLInputElement>this.progressBarRef.nativeElement;
+        if (this.autoplay) {
+            this.play();
+        }
+        this.touch(true);
+    }
+
+    touch(init?: boolean): void {
+        if (!init) {
+            this.controlState = this.controlState === 'up' ? 'down' : 'up';
+        }
+
+        if (this.controlState === 'up') {
+            if (this.slidedownHandle != undefined) {
+                clearTimeout(this.slidedownHandle);
+            }
+            this.slidedownHandle = setTimeout(() => {
+                this.touch();
+            }, this.autoSlideTime);
+        }
     }
 
     play(): void {
@@ -52,22 +92,23 @@ export class PlayerComponent implements AfterViewInit {
     }
 
     beginChange(): void {
-        this.change = true;
+        this.changing = true;
     }
 
     endChange(): void {
-        console.log('seek length:' + this.video.seekable.length);
-        console.log('current:' + this.video.currentTime);
-        var time = this.video.duration * (+this.progressBar.value / 100);
-        console.log(time);
+        const time = this.video.duration * (+this.progressBar.value / 100);
         this.video.currentTime = time;
-        console.log(this.video.currentTime);
-        this.change = false;
+        this.currentTime = this.format(time);
+        this.changing = false;
     }
 
     seek(): void {
-        const value = (100 / this.video.duration) * this.video.currentTime;
-        if (!this.change) {
+        if (!this.changing) {
+            if (this.duration == undefined) {
+                this.duration = this.format(this.video.duration);
+            }
+            this.currentTime = this.format(this.video.currentTime);
+            const value = (100 / this.video.duration) * this.video.currentTime;
             this.progressBar.value = value.toString();
         }
     }
@@ -83,5 +124,12 @@ export class PlayerComponent implements AfterViewInit {
             this.statusBar.show();
         }
         this.navCtrl.pop();
+    }
+
+    format(time: number): string {
+        var h = Math.floor(time / 3600) < 10 ? '0' + Math.floor(time / 3600) : Math.floor(time / 3600);
+        var m = Math.floor((time / 60 % 60)) < 10 ? '0' + Math.floor((time / 60 % 60)) : Math.floor((time / 60 % 60));
+        var s = Math.floor((time % 60)) < 10 ? '0' + Math.floor((time % 60)) : Math.floor((time % 60));
+        return `${h}:${m}:${s}`;
     }
 }

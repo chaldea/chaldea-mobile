@@ -5,7 +5,8 @@ import * as ApiServiceProxies from './service-proxies';
 @NgModule({
     providers: [
         ApiServiceProxies.BangumiServiceProxy,
-        ApiServiceProxies.AnimeServiceProxy
+        ApiServiceProxies.AnimeServiceProxy,
+        ApiServiceProxies.BannerServiceProxy
     ]
 })
 export class ServiceProxyModule { }

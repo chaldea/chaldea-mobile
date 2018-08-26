@@ -11,7 +11,7 @@ import { AppConsts } from '../../../shared/AppConsts';
 export class BangumiListPage extends BasePage implements OnInit {
   bangumi: Bangumi;
   animes: Anime[] = [];
-  coverUrl = `${AppConsts.appBaseUrl}/statics/imgs/`;
+  coverUrl = `${AppConsts.appBaseUrl}/statics/imgs/covers/`;
 
   constructor(
     injector: Injector,
