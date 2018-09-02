@@ -195,6 +195,55 @@ export class AnimeServiceProxy {
         }
         return Observable.of<void>(<any>null);
     }
+
+    /**
+     * @input (optional) 
+     * @return Success
+     */
+    updateDetail(input: AnimeDetail | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/anime/updateDetail";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).flatMap((response_ : any) => {
+            return this.processUpdateDetail(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processUpdateDetail(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processUpdateDetail(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
 }
 
 @Injectable()
@@ -494,6 +543,9 @@ export interface IAnime {
 export class AnimeDetail implements IAnimeDetail {
     animeId: string | undefined;
     desc: string | undefined;
+    state: string | undefined;
+    type: string | undefined;
+    tags: string[] | undefined;
     animes: Resource[] | undefined;
     comics: Resource[] | undefined;
     novels: Resource[] | undefined;
@@ -513,6 +565,13 @@ export class AnimeDetail implements IAnimeDetail {
         if (data) {
             this.animeId = data["animeId"];
             this.desc = data["desc"];
+            this.state = data["state"];
+            this.type = data["type"];
+            if (data["tags"] && data["tags"].constructor === Array) {
+                this.tags = [];
+                for (let item of data["tags"])
+                    this.tags.push(item);
+            }
             if (data["animes"] && data["animes"].constructor === Array) {
                 this.animes = [];
                 for (let item of data["animes"])
@@ -547,6 +606,13 @@ export class AnimeDetail implements IAnimeDetail {
         data = typeof data === 'object' ? data : {};
         data["animeId"] = this.animeId;
         data["desc"] = this.desc;
+        data["state"] = this.state;
+        data["type"] = this.type;
+        if (this.tags && this.tags.constructor === Array) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
         if (this.animes && this.animes.constructor === Array) {
             data["animes"] = [];
             for (let item of this.animes)
@@ -575,6 +641,9 @@ export class AnimeDetail implements IAnimeDetail {
 export interface IAnimeDetail {
     animeId: string | undefined;
     desc: string | undefined;
+    state: string | undefined;
+    type: string | undefined;
+    tags: string[] | undefined;
     animes: Resource[] | undefined;
     comics: Resource[] | undefined;
     novels: Resource[] | undefined;
@@ -586,7 +655,6 @@ export class Resource implements IResource {
     uid: string | undefined;
     name: string | undefined;
     url: string | undefined;
-    id: string | undefined;
 
     constructor(data?: IResource) {
         if (data) {
@@ -602,7 +670,6 @@ export class Resource implements IResource {
             this.uid = data["uid"];
             this.name = data["name"];
             this.url = data["url"];
-            this.id = data["id"];
         }
     }
 
@@ -617,7 +684,6 @@ export class Resource implements IResource {
         data["uid"] = this.uid;
         data["name"] = this.name;
         data["url"] = this.url;
-        data["id"] = this.id;
         return data; 
     }
 }
@@ -626,7 +692,6 @@ export interface IResource {
     uid: string | undefined;
     name: string | undefined;
     url: string | undefined;
-    id: string | undefined;
 }
 
 export class Comment implements IComment {

@@ -52,10 +52,10 @@ export class PlayerComponent implements AfterViewInit {
     ) {
         this.src = navParams.data["src"];
         this.title = navParams.data["title"];
-        if (platform.is("ios") || platform.is("android")) {
-            this.statusBar.hide();
-            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
-        }
+        // if (platform.is("ios") || platform.is("android")) {
+        //     this.statusBar.hide();
+        //     this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
+        // }
     }
 
     ngAfterViewInit(): void {
@@ -118,15 +118,18 @@ export class PlayerComponent implements AfterViewInit {
     }
 
     goBack(): void {
-        if (this.platform.is("ios") || this.platform.is("android")) {
-            this.screenOrientation.unlock();
-            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-            this.statusBar.show();
-        }
+        // if (this.platform.is("ios") || this.platform.is("android")) {
+        //     this.screenOrientation.unlock();
+        //     this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+        //     this.statusBar.show();
+        // }
         this.navCtrl.pop();
     }
 
     format(time: number): string {
+        if (isNaN(time)) {
+            time = 0;
+        }
         var h = Math.floor(time / 3600) < 10 ? '0' + Math.floor(time / 3600) : Math.floor(time / 3600);
         var m = Math.floor((time / 60 % 60)) < 10 ? '0' + Math.floor((time / 60 % 60)) : Math.floor((time / 60 % 60));
         var s = Math.floor((time % 60)) < 10 ? '0' + Math.floor((time % 60)) : Math.floor((time % 60));
