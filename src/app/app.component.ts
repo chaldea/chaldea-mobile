@@ -15,7 +15,7 @@ export class MyApp {
     platform.ready().then(() => {
       if (platform.is('android')) {
         // screenOrientation.lock(screenOrientation.ORIENTATIONS.PORTRAIT);
-        statusBar.overlaysWebView(true);
+        // statusBar.overlaysWebView(true);
         statusBar.backgroundColorByHexString('#ea7a99');
       }
       

@@ -5,9 +5,13 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <div class="blank-10"></div>
   <div class="box">
-    <div class="box-item" *ngFor="let anime of animes" (click)="showBangumiDetail()">
+    <div class="box-item" *ngFor="let anime of animes" (click)="showBangumiDetail(anime)">
       <div class="cover">
         <img [src]="coverUrl + anime.cover" alt="">
       </div>

@@ -80,6 +80,13 @@ export class BangumiPage extends BasePage implements OnInit {
   //   this.slides.startAutoplay();
   // }
 
+  doRefresh(refresher): void {
+    const self = this;
+    self.getList(() => {
+      refresher.complete();
+    });
+  }
+
   loading(infiniteScroll): void {
     const self = this;
     if (self.disableLoading) {

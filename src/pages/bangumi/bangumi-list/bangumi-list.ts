@@ -3,6 +3,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { BasePage } from '../../base-page';
 import { AnimeServiceProxy, Anime, Bangumi } from '../../../shared/service-proxies/service-proxies';
 import { AppConsts } from '../../../shared/AppConsts';
+import { BangumiDetailPage } from '../bangumi-detail/bangumi-detail';
 
 @Component({
   selector: 'page-bangumi-list',
@@ -44,6 +45,17 @@ export class BangumiListPage extends BasePage implements OnInit {
         if (callback) callback();
       });
     }
+  }
+
+  showBangumiDetail(anime: Anime): void {
+    this.navCtrl.push(BangumiDetailPage, { anime: anime });
+  }
+
+  doRefresh(refresher): void {
+    const self = this;
+    self.getList(() => {
+      refresher.complete();
+    });
   }
 
   loading(infiniteScroll): void {

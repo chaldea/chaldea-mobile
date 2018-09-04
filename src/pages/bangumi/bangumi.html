@@ -5,6 +5,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-slides #slides *ngIf="banners && banners.length>0" speed="500" autoplay="5000" loop pager>
     <ion-slide *ngFor="let banner of banners">
       <img [src]="bannerUrl + banner.image" alt="">
