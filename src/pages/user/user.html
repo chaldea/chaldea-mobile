@@ -10,18 +10,55 @@
     <div class="blank-10"></div>
     <div class="thumbnail">
         <div class="stable">
-            <div class="avatar"></div>
+            <div class="avatar">
+                <img src="./assets/imgs/avatar.jpg" alt="">
+            </div>
         </div>
         <div class="wrapper">
-
+            <div class="user-name">最终的阿瓦隆</div>
+            <div class="count">
+                <div>关注：10</div>
+                <div>成就：110</div>
+            </div>
         </div>
     </div>
 
-    <div class="blank-10"></div>
+    <!-- <div class="blank-10"></div>
     <ion-list>
-        <button ion-item *ngFor="let item of items" (click)="openNavDetailsPage(item)" icon-start>
+        <button ion-item *ngFor="let item of items" icon-start>
             <ion-icon [name]="'logo-' + item.icon" [ngStyle]="{'color': item.color}" item-start></ion-icon>
             {{ item.title }}
+        </button>
+    </ion-list> -->
+
+    <div class="blank-10"></div>
+    <ion-list>
+        <button ion-item icon-start>
+            <ion-icon name="md-alarm" item-start [ngStyle]="{'color': '#E63135'}"></ion-icon>
+            历史纪录
+        </button>
+        <button ion-item icon-start>
+            <ion-icon name="ios-star-outline" item-start [ngStyle]="{'color': '#0CA9EA'}"></ion-icon>
+            我的收藏
+        </button>
+        <button ion-item icon-start>
+            <ion-icon name="ios-bookmark-outline" item-start [ngStyle]="{'color': '#F46529'}"></ion-icon>
+            我的成就
+        </button>
+        <button ion-item icon-start>
+            <ion-icon name="md-chatboxes" item-start [ngStyle]="{'color': '#FFD439'}"></ion-icon>
+            我的消息
+        </button>
+    </ion-list>
+    <div class="blank-10"></div>
+    <ion-list>
+        <button ion-item icon-start>
+            <ion-icon name="ios-cog" item-start [ngStyle]="{'color': '#CE6296'}"></ion-icon>
+            系统设置
+        </button>
+        <button ion-item icon-start>
+            <ion-icon name="ios-create-outline" item-start [ngStyle]="{'color': '#78BD43'}"></ion-icon>
+            意见反馈
         </button>
     </ion-list>
 </ion-content>

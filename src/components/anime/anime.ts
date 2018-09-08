@@ -10,10 +10,14 @@ import { AppConsts } from '../../shared/AppConsts';
 })
 export class AnimeComponent {
   @Input() resources: Resource[];
+  selected: Resource;
+
   constructor(public modalCtrl: ModalController) {
   }
 
   play(resource: Resource): void {
+    this.selected = resource;
+    console.log(this.selected);
     const profileModal = this.modalCtrl.create(PlayerComponent, {
       src: `${AppConsts.resourceServer}/${resource.url}`,
       title: resource.name

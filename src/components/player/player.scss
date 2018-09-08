@@ -1,5 +1,25 @@
 player {
     $video-bg-color: #000; // #c2b8b6;
+    $slider-width-number: 4096;
+    $slider-width: 100%;
+    $slider-height: 2px;
+    $background-slider: #c7c7c7;
+    $background-filled-slider: #ea7a99;
+    $thumb-width: 18px;
+    $thumb-height: 18px;
+    $thumb-radius: 50%;
+    $thumb-background: #fff;
+    $thumb-border: 1px solid #ea7a99;
+    $shadow-size: -8px;
+    $fit-thumb-in-slider: -8px;
+    @function makelongshadow($color, $size) {
+        $val: 5px 0 0 $size $color;
+        @for $i from 6 through $slider-width-number {
+            $val: #{$val},
+            #{$i}px 0 0 $size #{$color};
+        }
+        @return $val;
+    }
     .player {
         width: 100vw;
         height: 100vh;
@@ -35,6 +55,12 @@ player {
             width: 100vw;
             height: 100vh;
         }
+        .display {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            background-color: none;
+        }
         .control {
             width: 100%;
             position: fixed;
@@ -45,36 +71,35 @@ player {
             .progress-bar {
                 width: 100%;
                 height: 25px;
-                input[type=range] {
-                    -webkit-appearance: none;
-                    width: 100%;
-                    background: transparent;
-                }
-                input[type=range]::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                }
-                input[type=range]:focus {
-                    outline: none;
-                }
-                input[type=range]::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    border: 1px solid #ec595d;
-                    height: 13px;
-                    width: 13px;
-                    border-radius: 50%;
-                    background: #ffffff;
+                input {
+                    align-items: center;
+                    appearance: none;
+                    background: none;
                     cursor: pointer;
-                    margin-top: -5px;
-                }
-                input[type=range]::-webkit-slider-runnable-track {
-                    width: 100%;
-                    height: 3px;
-                    cursor: pointer;
-                    background: #40403f;
-                    border-radius: 1.3px;
-                }
-                input[type=range]:focus::-webkit-slider-runnable-track {
-                    background: #6f3d40;
+                    display: flex;
+                    height: 100%;
+                    overflow: hidden;
+                    width: $slider-width;
+                    &:focus {
+                        box-shadow: none;
+                        outline: none;
+                    }
+                    &::-webkit-slider-runnable-track {
+                        background: $background-filled-slider;
+                        content: '';
+                        height: $slider-height;
+                        pointer-events: none;
+                    }
+                    &::-webkit-slider-thumb {
+                        width: $thumb-width;
+                        height: $thumb-height;
+                        appearance: none;
+                        background: $thumb-background;
+                        border-radius: $thumb-radius;
+                        box-shadow: makelongshadow($background-slider, $shadow-size);
+                        margin-top: $fit-thumb-in-slider;
+                        border: $thumb-border;
+                    }
                 }
             }
             .control-bar {

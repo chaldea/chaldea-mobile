@@ -1,0 +1,16 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title mode="ios">动漫精选</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <div class="rec-item" *ngFor="let recommand of recommands">
+        <div class="cover">
+            <img [src]="recommand.cover" alt="">
+        </div>
+        <div class="title">
+            {{recommand.title}}
+        </div>
+    </div>
+</ion-content>

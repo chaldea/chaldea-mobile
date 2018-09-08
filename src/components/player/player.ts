@@ -42,6 +42,11 @@ export class PlayerComponent implements AfterViewInit {
     controlState = 'up';
     slidedownHandle: number;
     autoSlideTime = 5000;
+    totalWidth = 0;
+    totalPercent = 0.25;
+    beginX = 0;
+    lastX = 0;
+    percentCount = 0;
 
     constructor(
         public navCtrl: NavController,
@@ -58,37 +63,70 @@ export class PlayerComponent implements AfterViewInit {
         }
     }
 
+    goBack(): void {
+        if (this.platform.is("ios") || this.platform.is("android")) {
+            this.screenOrientation.unlock();
+            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+            this.statusBar.show();
+        }
+        this.navCtrl.pop();
+    }
+
     ngAfterViewInit(): void {
         this.video = <HTMLVideoElement>this.videoRef.nativeElement;
         this.progressBar = <HTMLInputElement>this.progressBarRef.nativeElement;
         if (this.autoplay) {
             this.play();
         }
-        this.touch(true);
+        this.hideControl();
     }
 
-    touch(init?: boolean): void {
-        if (!init) {
-            this.controlState = this.controlState === 'up' ? 'down' : 'up';
-        }
-
-        if (this.controlState === 'up') {
-            if (this.slidedownHandle != undefined) {
-                clearTimeout(this.slidedownHandle);
-            }
-            this.slidedownHandle = setTimeout(() => {
-                this.touch();
-            }, this.autoSlideTime);
-        }
+    showControl(): void {
+        this.controlState = 'up';
     }
 
-    play(): void {
-        if (this.video.paused) {
-            this.video.play();
-        } else {
-            this.video.pause();
+    hideControl(): void {
+        if (this.slidedownHandle != undefined) {
+            clearTimeout(this.slidedownHandle);
         }
-        this.paused = this.video.paused;
+        this.slidedownHandle = setTimeout(() => {
+            this.controlState = 'down';
+        }, this.autoSlideTime);
+    }
+
+    touchStart($event): void {
+        this.showControl();
+        this.beginChange();
+        const target = <HTMLDivElement>($event.target || $event.srcElement || $event.currentTarget);
+        this.totalWidth = target.clientWidth;
+        this.beginX = $event.touches ? $event.touches[0].clientX : 0;
+        this.lastX = this.beginX;
+        this.percentCount = 0;
+    }
+
+    touchMove($event): void {
+        if (this.slidedownHandle != undefined) {
+            clearTimeout(this.slidedownHandle);
+        }
+        const currentX = $event.touches ? $event.touches[0].clientX : 0;
+        const delta = currentX - this.lastX;
+        if (delta == 0) return;
+        const percent = delta / this.totalWidth * this.totalPercent * 100;
+        this.percentCount += percent;
+        this.lastX = currentX;
+        if (Math.abs(this.percentCount) < 1) {
+            return;
+        }
+        let currentProcess = +this.progressBar.value + this.percentCount;
+        this.progressBar.value = (currentProcess > 100 ? currentProcess < 0 ? 0 : 100 : currentProcess).toString();
+        this.percentCount = 0;
+    }
+
+    touchEnd(): void {
+        const passWidth = Math.abs(this.lastX - this.beginX);
+        this.hideControl();
+        if (passWidth == 0) return;
+        this.endChange();
     }
 
     beginChange(): void {
@@ -100,6 +138,15 @@ export class PlayerComponent implements AfterViewInit {
         this.video.currentTime = time;
         this.currentTime = this.format(time);
         this.changing = false;
+    }
+
+    play(): void {
+        if (this.video.paused) {
+            this.video.play();
+        } else {
+            this.video.pause();
+        }
+        this.paused = this.video.paused;
     }
 
     seek(): void {
@@ -115,15 +162,6 @@ export class PlayerComponent implements AfterViewInit {
 
     stopped(): void {
         this.paused = this.video.paused;
-    }
-
-    goBack(): void {
-        if (this.platform.is("ios") || this.platform.is("android")) {
-            this.screenOrientation.unlock();
-            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-            this.statusBar.show();
-        }
-        this.navCtrl.pop();
     }
 
     format(time: number): string {

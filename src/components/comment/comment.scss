@@ -2,7 +2,6 @@ comment {
     .comment {
         background-color: $content-bg-color;
         min-height: calc(100vh - 510px);
-
         .title {
             padding-left: 10px;
             min-height: 30px;
@@ -10,45 +9,74 @@ comment {
             text-align: left;
             @extend %border-normal-bottom;
         }
-
         .thumbnail {
             min-height: 120px;
             width: 100%;
             display: flex;
-            flex-flow: row;
+            flex-direction: row;
             padding: 10px;
             @extend %border-normal-bottom;
             .stable {
-                width:80px;
+                width: 80px;
                 display: flex;
                 justify-content: center;
-                .avatar{
+                .avatar {
                     height: 64px;
                     width: 64px;
                     border: 1px solid #DDD;
                     border-radius: 50%;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 50%;
+                    }
                 }
             }
-
             .wrapper {
                 padding-left: 10px;
-                flex:1;
+                flex: 1;
                 display: flex;
-                flex-flow: column;
+                flex-direction: column;
                 .header {
                     height: 20px;
                     display: flex;
-                    flex-flow: row;
+                    flex-direction: row;
+                    color: #aeaeae;
+                    .auth {
+                        flex: 1;
+                        height: 20px;
+                        line-height: 20px;
+                        font-size: 12px;
+                    }
+                    .level {
+                        min-width: 30px;
+                        padding: 0px 5px 0px 0px;
+                        line-height: 20px;
+                        text-align: right;
+                    }
+                    .date {
+                        min-width: 40px;
+                        line-height: 20px;
+                        text-align: right;
+                    }
                 }
-                .content{
+                .comment-content {
                     flex: 1;
-                    display: flex;
-                    flex-flow: row;
+                    line-height: 20px;
+                    white-space: normal;
+                    word-break: break-all;
                 }
                 .footer {
                     height: 20px;
                     display: flex;
-                    flex-flow: row;
+                    flex-direction: row;
+                    .tip {
+                        min-width: 50px;
+                        padding-right: 5px;
+                        ion-icon {
+                            color: #cfcfcf;
+                        }
+                    }
                 }
             }
         }

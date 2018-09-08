@@ -4,7 +4,7 @@
       选集
     </div>
     <div class="slice">
-      <div class="item" *ngFor="let resource of resources" (click)="play(resource)">{{resource.name}}</div>
+      <div class="item" *ngFor="let resource of resources" (click)="play(resource)" [ngClass]="{'selected': resource == selected}">{{resource.name}}</div>
     </div>
   </div>
 </div>

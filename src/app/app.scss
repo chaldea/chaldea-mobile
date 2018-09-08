@@ -72,5 +72,9 @@ $content-bg-color:#ffffff; // 网页模块内容背景色
             border-radius: 5px;
             @extend %border-normal;
         }
+        .item.selected {
+            color: #ea7a99;
+            border: 1px solid #ea7a99;
+        }
     }
 }

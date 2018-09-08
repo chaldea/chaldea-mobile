@@ -7,8 +7,23 @@
 <ion-content>
   <div>
     <div class="info">
-      <div class="cover"></div>
-      <div class="staff"></div>
+      <div class="info-left">
+        <div class="cover">
+          <img [src]="cover" alt="">
+        </div>
+        <div class="staff"></div>
+      </div>
+      <div class="info-right">
+        <div class="info-item">这是公司名称/作者名</div>
+        <div class="info-item">更新到第51话(2018-07-01)</div>
+        <div class="info-item">校园 魔法 少女</div>
+        <div class="info-item">播放量：3500万</div>
+        <div class="info-item">订阅人数：11234</div>
+        <div class="info-item">
+          <button>订阅</button>
+          <button>继续</button>
+        </div>
+      </div>
     </div>
     <div class="desc">
       {{animeDetail.desc}}

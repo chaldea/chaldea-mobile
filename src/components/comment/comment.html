@@ -3,7 +3,9 @@
     <div class="title">评论区</div>
     <div class="thumbnail" *ngFor="let item of items">
       <div class="stable">
-        <div class="avatar"></div>
+        <div class="avatar">
+          <img src="./assets/imgs/avatar.jpg" alt="">
+        </div>
       </div>
       <div class="wrapper">
         <div class="header">
@@ -11,13 +13,21 @@
           <div class="level">#{{item.level}}</div>
           <div class="date">{{item.date}}</div>
         </div>
-        <div class="content">
+        <div class="comment-content">
           {{item.comment}}
         </div>
         <div class="footer">
-          <div>回复</div>
-          <div>点赞</div>
-          <div>点赞</div>
+          <div class="tip">
+            <ion-icon ios="ios-chatbubbles-outline" md="ios-chatbubbles-outline"></ion-icon>
+            20
+          </div>
+          <div class="tip">
+            <ion-icon ios="md-thumbs-up" md="md-thumbs-up"></ion-icon>
+            1005
+          </div>
+          <div class="tip">
+            <ion-icon ios="md-thumbs-down" md="md-thumbs-down"></ion-icon>
+          </div>
         </div>
       </div>
     </div>

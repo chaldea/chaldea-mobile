@@ -2,12 +2,12 @@ page-bangumi {
     ion-slides {
         height: 200px;
     }
-    .scroll-content {
+    ion-content.has-refresher>.scroll-content {
         background-color: $page-bg-color;
     }
     .card {
         background-color: $content-bg-color;
-        margin: 0px 0px 10px 0px;
+        margin-bottom: 10px;
         .title {
             padding: 6px;
             font-weight: 600;

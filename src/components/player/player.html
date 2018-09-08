@@ -1,6 +1,8 @@
 <div class="player">
-    <video #video class="video" [attr.src]="src" (timeupdate)="seek()" (ended)="stopped()" (click)="touch()">
+    <video #video class="video" [attr.src]="src" (timeupdate)="seek()" (ended)="stopped()">
     </video>
+    <div class="display" (touchstart)="touchStart($event)" (touchmove)="touchMove($event)" (touchend)="touchEnd($event)">
+    </div>
     <div class="control-title" [@controlTitle]="controlState">
         <div class="back" (click)="goBack()">
             <ion-icon ios="ios-arrow-back" md="ios-arrow-back"></ion-icon>

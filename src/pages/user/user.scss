@@ -1,4 +1,19 @@
 page-user {
+    ion-icon {
+        width: 32px;
+    }
+    .item-md ion-icon[item-left]+.item-inner,
+    .item-md ion-icon[item-left]+.item-input,
+    .item-md ion-icon[item-start]+.item-inner,
+    .item-md ion-icon[item-start]+.item-input {
+        margin-left: 0px;
+    }
+    .list-ios>.item-block:first-child {
+        border-top: none;
+    }
+    .list-ios>.item-block:last-child {
+        border-bottom: none;
+    }
     .scroll-content {
         background-color: $page-bg-color;
     }
@@ -9,16 +24,19 @@ page-user {
         display: flex;
         flex-flow: row;
         padding: 10px;
-        @extend %border-normal-bottom;
         .stable {
             width: 80px;
             display: flex;
             justify-content: center;
+            align-items: center;
             .avatar {
                 height: 64px;
                 width: 64px;
                 border: 1px solid #DDD;
                 border-radius: 50%;
+                img {
+                    border-radius: 50%;
+                }
             }
         }
         .wrapper {
@@ -26,20 +44,19 @@ page-user {
             flex: 1;
             display: flex;
             flex-flow: column;
-            .header {
-                height: 20px;
-                display: flex;
-                flex-flow: row;
+            justify-content: center;
+            .user-name {
+                height: 30px;
+                line-height: 30px;
+                font-size: 13px;
             }
-            .content {
-                flex: 1;
+            .count {
                 display: flex;
-                flex-flow: row;
-            }
-            .footer {
-                height: 20px;
-                display: flex;
-                flex-flow: row;
+                flex-direction: row;
+                color: #9a9a9a;
+                div {
+                    margin-right: 10px;
+                }
             }
         }
     }

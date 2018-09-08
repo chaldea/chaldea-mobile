@@ -31,12 +31,21 @@ $segment-button-ios-border-width: 0px;
 $tabs-ios-tab-icon-color: color($colors, gray);
 $tabs-ios-tab-icon-color-active: color($colors, pink);
 $tabs-ios-tab-text-color-active: color($colors, pink);
+$list-ios-margin-top: 0px;
+$list-ios-margin-bottom: 0px;
+$list-ios-border-color: #e9eeef;
+$list-inset-ios-margin-left: 0px;
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
 $tabs-md-tab-icon-color: color($colors, gray);
 $tabs-md-tab-icon-color-active: color($colors, pink);
 $tabs-md-tab-text-color-active: color($colors, pink);
+$list-md-margin-bottom: 0px;
+$list-md-margin-top: 0px;
+$list-md-border-color: #e9eeef;
+$list-inset-md-margin-left: 0px;
+$item-md-detail-push-show: true;
 // App Windows Variables
 // --------------------------------------------------
 // Windows only Sass variables can go here
