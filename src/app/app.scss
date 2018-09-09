@@ -78,3 +78,59 @@ $content-bg-color:#ffffff; // 网页模块内容背景色
         }
     }
 }
+
+// hide video controls on ios
+video {
+    &::-webkit-media-controls-overlay-enclosure {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls-enclosure {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls-panel {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls-play-button {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls-start-playback-button {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls-current-time-display {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls-time-remaining-display {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls-timeline {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls-mute-button {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls-volume-slider {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-webkit-media-controls-fullscreen-button {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+    &::-internal-media-controls-download-button {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+}
