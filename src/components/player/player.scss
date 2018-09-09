@@ -24,6 +24,48 @@ player {
         width: 100vw;
         height: 100vh;
         background: $video-bg-color;
+        video::-webkit-media-controls-overlay-enclosure {
+            display: none !important;
+        }
+        video::-webkit-media-controls-enclosure {
+            display: none !important;
+        }
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+        video::-webkit-media-controls-panel {
+            display: none !important;
+        }
+        video::-webkit-media-controls-play-button {
+            display: none !important;
+        }
+        video::-webkit-media-controls-current-time-display {
+            display: none !important;
+        }
+        video::-webkit-media-controls-time-remaining-display {
+            display: none !important;
+        }
+        video::-webkit-media-controls-timeline {
+            display: none !important;
+        }
+        video::-webkit-media-controls-mute-button {
+            display: none !important;
+        }
+        video::-webkit-media-controls-volume-slider {
+            display: none !important;
+        }
+        video::-webkit-media-controls-fullscreen-button {
+            display: none !important;
+        }
+        video::-internal-media-controls-download-button {
+            display: none !important;
+        }
+        .video {
+            position: fixed;
+            background-color: $video-bg-color;
+            width: 100vw;
+            height: 100vh;
+        }
         .control-title {
             height: 30px;
             width: 100%;
@@ -48,12 +90,6 @@ player {
                 align-items: center;
                 color: #FFF;
             }
-        }
-        .video {
-            position: fixed;
-            background-color: $video-bg-color;
-            width: 100vw;
-            height: 100vh;
         }
         .display {
             width: 100vw;
