@@ -67,12 +67,12 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        if (this.platform.is("ios") || this.platform.is("android")) {
-            this.statusBar.hide();
-            this.screenOrientation.unlock();
-            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
-        }
-        document.webkitExitFullscreen();
+        // if (this.platform.is("ios") || this.platform.is("android")) {
+        //     this.statusBar.hide();
+        //     this.screenOrientation.unlock();
+        //     this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
+        // }
+        // document.webkitExitFullscreen();
         this.progressBar = <HTMLInputElement>this.progressBarRef.nativeElement;
         setTimeout(() => {
             this.initPlayer();
@@ -80,11 +80,11 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.platform.is("ios") || this.platform.is("android")) {
-            this.screenOrientation.unlock();
-            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-            this.statusBar.show();
-        }
+        // if (this.platform.is("ios") || this.platform.is("android")) {
+        //     this.screenOrientation.unlock();
+        //     this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+        //     this.statusBar.show();
+        // }
         this.videoContext.pause();
         this.videoContext.reset();
     }
