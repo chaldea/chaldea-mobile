@@ -22,6 +22,8 @@
     <preference name="StatusBarOverlaysWebView" value="true" />
     <preference name="StatusBarBackgroundColor" value="#ea7a99" />
     <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="MediaPlaybackRequiresUserAction" value="true"/>
+    <preference name="AllowInlineMediaPlayback" value="true" />
     <framework custom="true" src="build-extras.gradle" type="gradleReference" />
     <platform name="android">
         <hook src="hooks/copy-build-extras-gradle.js" type="before_build" />
