@@ -102,6 +102,10 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
                 return;
             }
             if (!this.changing) {
+                if (this.duration === '00:00:00') {
+                    this.duration = this.format(this.videoContext.duration);
+                }
+
                 this.currentTime = this.format(this.videoContext.currentTime);
                 const value = (100 / this.videoContext.duration) * this.videoContext.currentTime;
                 this.progressBar.value = value.toString();
@@ -166,7 +170,10 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
     touchEnd(): void {
         const passWidth = Math.abs(this.lastX - this.beginX);
         this.hideControl();
-        if (passWidth == 0) return;
+        if (passWidth == 0) {
+            this.changing = false;
+            return;
+        }
         this.endChange();
     }
 
@@ -185,7 +192,6 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
         if (this.videoContext.state !== VideoContext.STATE.PLAYING) {
             this.videoContext.play();
             this.paused = false;
-            this.duration = this.format(this.videoContext.duration);
         } else {
             this.videoContext.pause();
             this.paused = true;
