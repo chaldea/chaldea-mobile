@@ -73,6 +73,7 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
         }
         this.progressBar = <HTMLInputElement>this.progressBarRef.nativeElement;
+        document.webkitExitFullscreen();
         setTimeout(() => {
             this.initPlayer();
         }, 100);
