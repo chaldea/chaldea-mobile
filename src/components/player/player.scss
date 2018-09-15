@@ -24,7 +24,6 @@ player {
         width: 100vw;
         height: 100vh;
         background: $video-bg-color;
-        z-index: 2147483647;
         .video {
             position: fixed;
             background-color: $video-bg-color;

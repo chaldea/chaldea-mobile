@@ -1,7 +1,9 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, trigger, state, style, transition, animate } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, trigger, state, style, transition, animate, OnDestroy } from '@angular/core';
 import { NavParams, NavController, Platform } from 'ionic-angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { StatusBar } from '@ionic-native/status-bar';
+import { AppConsts } from '../../shared/AppConsts';
+import { Resource } from '../../shared/service-proxies/service-proxies';
 
 export class VideoSource {
     src: string;
@@ -27,15 +29,15 @@ export class VideoSource {
         ])
     ]
 })
-export class PlayerComponent implements AfterViewInit {
-    @ViewChild('video') videoRef: ElementRef;
+export class PlayerComponent implements AfterViewInit, OnDestroy {
     @ViewChild('progressBar') progressBarRef: ElementRef;
-    video: HTMLVideoElement;
+    resource: Resource;
+    videoContext: any;
     progressBar: HTMLInputElement;
     src: string;
     title: string;
-    duration: string;
-    currentTime: string;
+    duration = '00:00:00';
+    currentTime = '00:00:00';
     paused = true;
     changing = false;
     autoplay = true;
@@ -55,26 +57,63 @@ export class PlayerComponent implements AfterViewInit {
         public screenOrientation: ScreenOrientation,
         public statusBar: StatusBar
     ) {
-        this.src = navParams.data["src"];
-        this.title = navParams.data["title"];
-        if (platform.is("ios") || platform.is("android")) {
-            this.statusBar.hide();
-            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
-        }
+        this.resource = navParams.data['data'];
+        this.src = `${AppConsts.resourceServer}/${this.resource.url}`
+        this.title = this.resource.name;
     }
 
     goBack(): void {
+        this.navCtrl.pop();
+    }
+
+    ngAfterViewInit(): void {
+        if (this.platform.is("ios") || this.platform.is("android")) {
+            this.statusBar.hide();
+            this.screenOrientation.unlock();
+            this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
+        }
+        this.progressBar = <HTMLInputElement>this.progressBarRef.nativeElement;
+        setTimeout(() => {
+            this.initPlayer();
+        }, 100);
+    }
+
+    ngOnDestroy(): void {
         if (this.platform.is("ios") || this.platform.is("android")) {
             this.screenOrientation.unlock();
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
             this.statusBar.show();
         }
-        this.navCtrl.pop();
+        this.videoContext.pause();
+        this.videoContext.reset();
     }
 
-    ngAfterViewInit(): void {
-        this.video = <HTMLVideoElement>this.videoRef.nativeElement;
-        this.progressBar = <HTMLInputElement>this.progressBarRef.nativeElement;
+    initPlayer(): void {
+        const canvas = <any>document.getElementById('canvas');
+        // todo: get video size dynamically from a video service.
+        canvas.width = this.resource.width == 0 ? 1280 : this.resource.width;
+        canvas.height = this.resource.height == 0 ? 720 : this.resource.height;
+        this.videoContext = new VideoContext(canvas, () => { console.error('Sorry, your browser not support WebGL'); });
+        this.videoContext.registerCallback('stalled', () => {
+            // loading...
+        });
+        this.videoContext.registerCallback('update', (e) => {
+            if (e == 0) {
+                return;
+            }
+            if (!this.changing) {
+                this.currentTime = this.format(this.videoContext.currentTime);
+                const value = (100 / this.videoContext.duration) * this.videoContext.currentTime;
+                this.progressBar.value = value.toString();
+            }
+        });
+        this.videoContext.registerCallback('ended', () => {
+            // this.videoContext.pause();
+            // this.paused = true;
+        });
+        const videoNode = this.videoContext.video(this.src);
+        videoNode.connect(this.videoContext.destination);
+        videoNode.startAt(0);
         if (this.autoplay) {
             this.play();
         }
@@ -82,16 +121,18 @@ export class PlayerComponent implements AfterViewInit {
     }
 
     showControl(): void {
-        this.controlState = 'up';
+        this.controlState = this.controlState == 'up' ? 'down' : 'up';
     }
 
     hideControl(): void {
         if (this.slidedownHandle != undefined) {
             clearTimeout(this.slidedownHandle);
         }
-        this.slidedownHandle = setTimeout(() => {
-            this.controlState = 'down';
-        }, this.autoSlideTime);
+        if (this.controlState == 'up') {
+            this.slidedownHandle = setTimeout(() => {
+                this.controlState = 'down';
+            }, this.autoSlideTime);
+        }
     }
 
     touchStart($event): void {
@@ -134,37 +175,27 @@ export class PlayerComponent implements AfterViewInit {
     }
 
     endChange(): void {
-        const time = this.video.duration * (+this.progressBar.value / 100);
-        this.video.currentTime = time;
+        const time = this.videoContext.duration * (+this.progressBar.value / 100);
+        this.videoContext.currentTime = time;
         this.currentTime = this.format(time);
         this.changing = false;
     }
 
     play(): void {
-        if (this.video.paused) {
-            this.video.play();
+        if (this.videoContext.state !== VideoContext.STATE.PLAYING) {
+            this.videoContext.play();
+            this.paused = false;
+            this.duration = this.format(this.videoContext.duration);
         } else {
-            this.video.pause();
+            this.videoContext.pause();
+            this.paused = true;
         }
-        this.paused = this.video.paused;
-    }
-
-    seek(): void {
-        if (!this.changing) {
-            if (this.duration == undefined) {
-                this.duration = this.format(this.video.duration);
-            }
-            this.currentTime = this.format(this.video.currentTime);
-            const value = (100 / this.video.duration) * this.video.currentTime;
-            this.progressBar.value = value.toString();
-        }
-    }
-
-    stopped(): void {
-        this.paused = this.video.paused;
     }
 
     format(time: number): string {
+        if (time == Infinity) {
+            time = 0;
+        }
         if (isNaN(time)) {
             time = 0;
         }

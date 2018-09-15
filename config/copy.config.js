@@ -1,7 +1,7 @@
 module.exports = {
   copyScript: {
     src: [
-      '{{ROOT}}/node_modules/videogular2/fonts/videogular.css'
+      '{{ROOT}}/node_modules/videocontext/dist/videocontext.js'
     ],
     dest: '{{BUILD}}'
   }

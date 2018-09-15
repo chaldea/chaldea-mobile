@@ -25,7 +25,6 @@ export class BangumiDetailPage extends BasePage implements OnInit {
   }
 
   ionViewDidLoad() {
-    // console.log('ionViewDidLoad BangumiDetailPage');
   }
 
   ngOnInit(): void {

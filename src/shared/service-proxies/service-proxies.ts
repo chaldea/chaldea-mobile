@@ -96,6 +96,58 @@ export class AnimeServiceProxy {
     }
 
     /**
+     * @input (optional) 
+     * @return Success
+     */
+    update(bangumiId: string, input: Anime | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/anime/{bangumiId}/update";
+        if (bangumiId === undefined || bangumiId === null)
+            throw new Error("The parameter 'bangumiId' must be defined.");
+        url_ = url_.replace("{bangumiId}", encodeURIComponent("" + bangumiId)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).flatMap((response_ : any) => {
+            return this.processUpdate(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processUpdate(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processUpdate(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
      * @animeId (optional) 
      * @return Success
      */
@@ -655,6 +707,8 @@ export class Resource implements IResource {
     uid: string | undefined;
     name: string | undefined;
     url: string | undefined;
+    width: number | undefined;
+    height: number | undefined;
 
     constructor(data?: IResource) {
         if (data) {
@@ -670,6 +724,8 @@ export class Resource implements IResource {
             this.uid = data["uid"];
             this.name = data["name"];
             this.url = data["url"];
+            this.width = data["width"];
+            this.height = data["height"];
         }
     }
 
@@ -684,6 +740,8 @@ export class Resource implements IResource {
         data["uid"] = this.uid;
         data["name"] = this.name;
         data["url"] = this.url;
+        data["width"] = this.width;
+        data["height"] = this.height;
         return data; 
     }
 }
@@ -692,6 +750,8 @@ export interface IResource {
     uid: string | undefined;
     name: string | undefined;
     url: string | undefined;
+    width: number | undefined;
+    height: number | undefined;
 }
 
 export class Comment implements IComment {
