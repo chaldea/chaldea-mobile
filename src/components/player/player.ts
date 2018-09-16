@@ -60,6 +60,7 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
         this.resource = navParams.data['data'];
         this.src = `${AppConsts.resourceServer}/${this.resource.url}`
         this.title = this.resource.name;
+        this.duration = this.format(this.resource.metaData.duration);
     }
 
     goBack(): void {
@@ -67,7 +68,7 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        if (this.platform.is("ios") || this.platform.is("android")) {
+        if (this.platform.is('cordova')) {
             this.statusBar.hide();
             this.screenOrientation.unlock();
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
@@ -79,7 +80,7 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.platform.is("ios") || this.platform.is("android")) {
+        if (this.platform.is('cordova')) {
             this.screenOrientation.unlock();
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
             this.statusBar.show();
@@ -90,9 +91,14 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
 
     initPlayer(): void {
         const canvas = <any>document.getElementById('canvas');
-        // todo: get video size dynamically from a video service.
-        canvas.width = this.resource.width == 0 ? 1280 : this.resource.width;
-        canvas.height = this.resource.height == 0 ? 720 : this.resource.height;
+        if (this.resource.metaData) {
+            canvas.width = this.resource.metaData.frameWidth;
+            canvas.height = this.resource.metaData.frameHeight;
+        } else {
+            canvas.width = 1280;
+            canvas.height = 720;
+        }
+
         this.videoContext = new VideoContext(canvas, () => { console.error('Sorry, your browser not support WebGL'); });
         this.videoContext.registerCallback('stalled', () => {
             // loading...
@@ -102,10 +108,6 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
                 return;
             }
             if (!this.changing) {
-                if (this.duration === '00:00:00') {
-                    this.duration = this.format(this.videoContext.duration);
-                }
-
                 this.currentTime = this.format(this.videoContext.currentTime);
                 const value = (100 / this.videoContext.duration) * this.videoContext.currentTime;
                 this.progressBar.value = value.toString();

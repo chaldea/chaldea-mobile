@@ -10,10 +10,12 @@ import { AppConsts } from '../../../shared/AppConsts';
 })
 export class BangumiDetailPage extends BasePage implements OnInit {
   segment: string = 'anime';
-  anime: Anime;
+  animeInfo: Anime = new Anime();
   animeDetail: AnimeDetail = new AnimeDetail();
   title = '';
   cover = '';
+  latest = '';
+  tags = '';
 
   constructor(
     injector: Injector,
@@ -24,17 +26,20 @@ export class BangumiDetailPage extends BasePage implements OnInit {
     super(injector);
   }
 
-  ionViewDidLoad() {
-  }
-
   ngOnInit(): void {
     const self = this;
-    self.anime = <Anime>self.navParams.data.anime;
-    self.title = self.anime.title;
-    self.cover = `${AppConsts.appBaseUrl}/statics/imgs/covers/${self.anime.cover}`;
-    if (self.anime) {
-      self.animeServiceProxy.getdetail(self.anime.id).subscribe((rep) => {
+    self.animeInfo = <Anime>self.navParams.data.anime;
+    self.title = self.animeInfo.title;
+    self.cover = `${AppConsts.appBaseUrl}/statics/imgs/covers/${self.animeInfo.cover}`;
+    if (self.animeInfo) {
+      self.animeServiceProxy.getdetail(self.animeInfo.id).subscribe((rep) => {
         self.animeDetail = rep;
+        if (self.animeDetail.animes && self.animeDetail.animes.length > 0) {
+          self.latest = self.animeDetail.animes[self.animeDetail.animes.length - 1].name;
+        }
+        if (self.animeDetail.tags && self.animeDetail.tags.length > 0) {
+          self.tags = self.animeDetail.tags.join(' ');
+        }
       });
     }
   }

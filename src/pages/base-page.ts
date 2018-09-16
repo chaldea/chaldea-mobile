@@ -7,4 +7,8 @@ export class BasePage {
     constructor(injector: Injector) {
         this.toastCtrl = injector.get(ToastController);
     }
+
+    trace(obj: any): void {
+        console.log(obj);
+    }
 }

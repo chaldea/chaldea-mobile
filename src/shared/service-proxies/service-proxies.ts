@@ -552,6 +552,8 @@ export class ApiServiceProxy {
 export class Anime implements IAnime {
     title: string | undefined;
     cover: string | undefined;
+    playCounts: number | undefined;
+    subCounts: number | undefined;
     id: string | undefined;
 
     constructor(data?: IAnime) {
@@ -567,6 +569,8 @@ export class Anime implements IAnime {
         if (data) {
             this.title = data["title"];
             this.cover = data["cover"];
+            this.playCounts = data["playCounts"];
+            this.subCounts = data["subCounts"];
             this.id = data["id"];
         }
     }
@@ -581,6 +585,8 @@ export class Anime implements IAnime {
         data = typeof data === 'object' ? data : {};
         data["title"] = this.title;
         data["cover"] = this.cover;
+        data["playCounts"] = this.playCounts;
+        data["subCounts"] = this.subCounts;
         data["id"] = this.id;
         return data; 
     }
@@ -589,12 +595,17 @@ export class Anime implements IAnime {
 export interface IAnime {
     title: string | undefined;
     cover: string | undefined;
+    playCounts: number | undefined;
+    subCounts: number | undefined;
     id: string | undefined;
 }
 
 export class AnimeDetail implements IAnimeDetail {
     animeId: string | undefined;
     desc: string | undefined;
+    auth: string | undefined;
+    publisher: string | undefined;
+    director: string | undefined;
     state: string | undefined;
     type: string | undefined;
     tags: string[] | undefined;
@@ -617,6 +628,9 @@ export class AnimeDetail implements IAnimeDetail {
         if (data) {
             this.animeId = data["animeId"];
             this.desc = data["desc"];
+            this.auth = data["auth"];
+            this.publisher = data["publisher"];
+            this.director = data["director"];
             this.state = data["state"];
             this.type = data["type"];
             if (data["tags"] && data["tags"].constructor === Array) {
@@ -658,6 +672,9 @@ export class AnimeDetail implements IAnimeDetail {
         data = typeof data === 'object' ? data : {};
         data["animeId"] = this.animeId;
         data["desc"] = this.desc;
+        data["auth"] = this.auth;
+        data["publisher"] = this.publisher;
+        data["director"] = this.director;
         data["state"] = this.state;
         data["type"] = this.type;
         if (this.tags && this.tags.constructor === Array) {
@@ -693,6 +710,9 @@ export class AnimeDetail implements IAnimeDetail {
 export interface IAnimeDetail {
     animeId: string | undefined;
     desc: string | undefined;
+    auth: string | undefined;
+    publisher: string | undefined;
+    director: string | undefined;
     state: string | undefined;
     type: string | undefined;
     tags: string[] | undefined;
@@ -707,8 +727,7 @@ export class Resource implements IResource {
     uid: string | undefined;
     name: string | undefined;
     url: string | undefined;
-    width: number | undefined;
-    height: number | undefined;
+    metaData: MediaMetaData | undefined;
 
     constructor(data?: IResource) {
         if (data) {
@@ -724,8 +743,7 @@ export class Resource implements IResource {
             this.uid = data["uid"];
             this.name = data["name"];
             this.url = data["url"];
-            this.width = data["width"];
-            this.height = data["height"];
+            this.metaData = data["metaData"] ? MediaMetaData.fromJS(data["metaData"]) : <any>undefined;
         }
     }
 
@@ -740,8 +758,7 @@ export class Resource implements IResource {
         data["uid"] = this.uid;
         data["name"] = this.name;
         data["url"] = this.url;
-        data["width"] = this.width;
-        data["height"] = this.height;
+        data["metaData"] = this.metaData ? this.metaData.toJSON() : <any>undefined;
         return data; 
     }
 }
@@ -750,8 +767,7 @@ export interface IResource {
     uid: string | undefined;
     name: string | undefined;
     url: string | undefined;
-    width: number | undefined;
-    height: number | undefined;
+    metaData: MediaMetaData | undefined;
 }
 
 export class Comment implements IComment {
@@ -791,6 +807,53 @@ export class Comment implements IComment {
 export interface IComment {
     content: string | undefined;
     id: string | undefined;
+}
+
+export class MediaMetaData implements IMediaMetaData {
+    duration: number | undefined;
+    frameWidth: number | undefined;
+    frameHeight: number | undefined;
+    frameRate: number | undefined;
+
+    constructor(data?: IMediaMetaData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.duration = data["duration"];
+            this.frameWidth = data["frameWidth"];
+            this.frameHeight = data["frameHeight"];
+            this.frameRate = data["frameRate"];
+        }
+    }
+
+    static fromJS(data: any): MediaMetaData {
+        let result = new MediaMetaData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["duration"] = this.duration;
+        data["frameWidth"] = this.frameWidth;
+        data["frameHeight"] = this.frameHeight;
+        data["frameRate"] = this.frameRate;
+        return data; 
+    }
+}
+
+export interface IMediaMetaData {
+    duration: number | undefined;
+    frameWidth: number | undefined;
+    frameHeight: number | undefined;
+    frameRate: number | undefined;
 }
 
 export class AddResourceDto implements IAddResourceDto {

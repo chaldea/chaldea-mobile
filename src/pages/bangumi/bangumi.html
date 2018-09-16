@@ -10,7 +10,7 @@
   </ion-refresher>
   <ion-slides #slides *ngIf="banners && banners.length>0" speed="500" autoplay="5000" loop pager>
     <ion-slide *ngFor="let banner of banners">
-      <img [src]="bannerUrl + banner.image" alt="">
+      <img [src]="bannerUrl + banner.image" alt="" />
     </ion-slide>
   </ion-slides>
 
