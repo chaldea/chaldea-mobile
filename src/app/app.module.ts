@@ -1,27 +1,27 @@
-import { NgModule, ErrorHandler } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { MyApp } from './app.component';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { IonicImageLoader } from 'ionic-image-loader';
 
+import { ComponentsModule } from '../components/components.module';
 import { AboutPage } from '../pages/about/about';
+import { BangumiPage } from '../pages/bangumi/bangumi';
+import { BangumiDetailPage } from '../pages/bangumi/bangumi-detail/bangumi-detail';
+import { BangumiListPage } from '../pages/bangumi/bangumi-list/bangumi-list';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
+import { RecommendPage } from '../pages/recommend/recommend';
 import { TabsPage } from '../pages/tabs/tabs';
-
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { ScreenOrientation } from '@ionic-native/screen-orientation';
-import { BangumiPage } from '../pages/bangumi/bangumi';
-import { BangumiListPage } from '../pages/bangumi/bangumi-list/bangumi-list';
-import { BangumiDetailPage } from '../pages/bangumi/bangumi-detail/bangumi-detail';
-import { ComponentsModule } from '../components/components.module';
 import { UserPage } from '../pages/user/user';
+import { AppConsts } from '../shared/AppConsts';
 import { API_BASE_URL } from '../shared/service-proxies/service-proxies';
 import { ServiceProxyModule } from '../shared/service-proxies/service-proxy.module';
-import { AppConsts } from '../shared/AppConsts';
-import { RecommendPage } from '../pages/recommend/recommend';
+import { MyApp } from './app.component';
 
 export function getRemoteServiceBaseUrl(): string {
     return AppConsts.appBaseUrl;
@@ -48,6 +48,7 @@ export function getRemoteServiceBaseUrl(): string {
             backButtonText: ''
         }),
         ComponentsModule.forRoot(),
+        IonicImageLoader.forRoot(),
         ServiceProxyModule,
     ],
     bootstrap: [IonicApp],

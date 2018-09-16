@@ -22,7 +22,7 @@
     <preference name="StatusBarOverlaysWebView" value="true" />
     <preference name="StatusBarBackgroundColor" value="#ea7a99" />
     <preference name="StatusBarStyle" value="lightcontent" />
-    <preference name="MediaPlaybackRequiresUserAction" value="true"/>
+    <preference name="MediaPlaybackRequiresUserAction" value="true" />
     <preference name="AllowInlineMediaPlayback" value="true" />
     <framework custom="true" src="build-extras.gradle" type="gradleReference" />
     <platform name="android">
@@ -90,6 +90,7 @@
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
+    <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-crosswalk-webview" spec="^2.4.0">
         <variable name="XWALK_VERSION" value="23+" />
         <variable name="XWALK_LITEVERSION" value="xwalk_core_library_canary:17+" />
