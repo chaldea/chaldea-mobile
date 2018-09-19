@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 
 export class SystemSettings {
-    public hostService = 'http://localhost:9001';
-    public resourceService = 'http://localhost:5000';
+    public hostService = 'http://101.132.113.66:9001';
+    public resourceService = 'http://192.168.1.100';
     public enableAutoPlay = true;
     public enableCache = true;
 }
@@ -13,8 +13,12 @@ export class ConfigManager {
 
     public load(): void {
         const json = localStorage.getItem('settings');
-        const item = JSON.parse(json);
-        this.settings = <SystemSettings>item;
+        if (json && json !== '') {
+            const item = JSON.parse(json);
+            this.settings = <SystemSettings>item;
+        } else {
+            this.settings = new SystemSettings();
+        }
     }
 
     public save(): void {
