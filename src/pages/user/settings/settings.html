@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>系统设置</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <div class="blank-10"></div>
+  <ion-list>
+    <button ion-item icon-start (tap)="showHostSetting()">
+      <ion-label>主站服务器</ion-label>
+      <ion-note item-end>{{setting.hostService}}</ion-note>
+    </button>
+    <button ion-item icon-start (tap)="showResourceSetting()">
+      <ion-label>资源服务器</ion-label>
+      <ion-note item-end>{{setting.resourceService}}</ion-note>
+    </button>
+  </ion-list>
+
+  <div class="blank-10"></div>
+  <ion-list>
+    <ion-item>
+      <ion-toggle [(ngModel)]="setting.enableAutoPlay" (ionChange)="enableAutoPlay()"></ion-toggle>
+      <ion-label>自动播放</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-toggle [(ngModel)]="setting.enableCache" (ionChange)="enableCache()"></ion-toggle>
+      <ion-label>启用缓存</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -52,7 +52,7 @@
     </ion-list>
     <div class="blank-10"></div>
     <ion-list>
-        <button ion-item icon-start>
+        <button ion-item icon-start (tap)="showSettings()">
             <ion-icon name="ios-cog" item-start [ngStyle]="{'color': '#CE6296'}"></ion-icon>
             系统设置
         </button>

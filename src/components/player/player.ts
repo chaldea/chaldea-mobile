@@ -2,8 +2,8 @@ import { Component, ViewChild, ElementRef, AfterViewInit, trigger, state, style,
 import { NavParams, NavController, Platform } from 'ionic-angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { StatusBar } from '@ionic-native/status-bar';
-import { AppConsts } from '../../shared/AppConsts';
 import { Resource } from '../../shared/service-proxies/service-proxies';
+import { ConfigManager } from '../../shared/config-manager';
 
 export class VideoSource {
     src: string;
@@ -55,10 +55,11 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
         public navParams: NavParams,
         public platform: Platform,
         public screenOrientation: ScreenOrientation,
-        public statusBar: StatusBar
+        public statusBar: StatusBar,
+        public config: ConfigManager
     ) {
         this.resource = navParams.data['data'];
-        this.src = `${AppConsts.resourceServer}/${this.resource.url}`
+        this.src = `${config.settings.resourceService}/${this.resource.url}`
         this.title = this.resource.name;
         this.duration = this.format(this.resource.metaData.duration);
     }

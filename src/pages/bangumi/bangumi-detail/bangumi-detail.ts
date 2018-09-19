@@ -1,8 +1,9 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { AnimeServiceProxy, Anime, AnimeDetail } from '../../../shared/service-proxies/service-proxies';
+
+import { Anime, AnimeDetail, AnimeServiceProxy } from '../../../shared/service-proxies/service-proxies';
 import { BasePage } from '../../base-page';
-import { AppConsts } from '../../../shared/AppConsts';
+import { ConfigManager } from '../../../shared/config-manager';
 
 @Component({
   selector: 'page-bangumi-detail',
@@ -21,7 +22,8 @@ export class BangumiDetailPage extends BasePage implements OnInit {
     injector: Injector,
     public navCtrl: NavController,
     public navParams: NavParams,
-    public animeServiceProxy: AnimeServiceProxy
+    public animeServiceProxy: AnimeServiceProxy,
+    public config: ConfigManager
   ) {
     super(injector);
   }
@@ -30,7 +32,7 @@ export class BangumiDetailPage extends BasePage implements OnInit {
     const self = this;
     self.animeInfo = <Anime>self.navParams.data.anime;
     self.title = self.animeInfo.title;
-    self.cover = `${AppConsts.appBaseUrl}/statics/imgs/covers/${self.animeInfo.cover}`;
+    self.cover = `${self.config.settings.hostService}/statics/imgs/covers/${self.animeInfo.cover}`;
     if (self.animeInfo) {
       self.animeServiceProxy.getdetail(self.animeInfo.id).subscribe((rep) => {
         self.animeDetail = rep;

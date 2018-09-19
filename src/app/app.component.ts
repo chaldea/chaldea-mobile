@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Platform } from 'ionic-angular';
@@ -17,7 +16,7 @@ export class MyApp {
     platform: Platform,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
-    screenOrientation: ScreenOrientation,
+    // screenOrientation: ScreenOrientation,
     imageLoaderConfig: ImageLoaderConfig
   ) {
     platform.ready().then(() => {

@@ -1,9 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+
+import { Anime, AnimeServiceProxy, Bangumi } from '../../../shared/service-proxies/service-proxies';
 import { BasePage } from '../../base-page';
-import { AnimeServiceProxy, Anime, Bangumi } from '../../../shared/service-proxies/service-proxies';
-import { AppConsts } from '../../../shared/AppConsts';
 import { BangumiDetailPage } from '../bangumi-detail/bangumi-detail';
+import { ConfigManager } from '../../../shared/config-manager';
 
 @Component({
   selector: 'page-bangumi-list',
@@ -12,7 +13,7 @@ import { BangumiDetailPage } from '../bangumi-detail/bangumi-detail';
 export class BangumiListPage extends BasePage implements OnInit {
   bangumi: Bangumi;
   animes: Anime[] = [];
-  coverUrl = `${AppConsts.appBaseUrl}/statics/imgs/covers/`;
+  coverUrl: string;
   limit = 12;
   disableLoading = false;
 
@@ -20,9 +21,11 @@ export class BangumiListPage extends BasePage implements OnInit {
     injector: Injector,
     public navCtrl: NavController,
     public navParams: NavParams,
-    public animeServiceProxy: AnimeServiceProxy
+    public animeServiceProxy: AnimeServiceProxy,
+    public config: ConfigManager
   ) {
     super(injector);
+    this.coverUrl = `${config.settings.hostService}/statics/imgs/covers/`;
   }
 
   ngOnInit(): void {

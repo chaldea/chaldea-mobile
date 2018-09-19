@@ -1,7 +1,7 @@
 import 'rxjs/add/observable/fromEvent';
 
 import { HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule, Injector } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
@@ -20,13 +20,18 @@ import { HomePage } from '../pages/home/home';
 import { RecommendPage } from '../pages/recommend/recommend';
 import { TabsPage } from '../pages/tabs/tabs';
 import { UserPage } from '../pages/user/user';
-import { AppConsts } from '../shared/AppConsts';
 import { API_BASE_URL } from '../shared/service-proxies/service-proxies';
 import { ServiceProxyModule } from '../shared/service-proxies/service-proxy.module';
 import { MyApp } from './app.component';
+import { SettingsPage } from '../pages/user/settings/settings';
+import { ConfigManager } from '../shared/config-manager';
+import { HostServiceSettingPage } from '../pages/user/settings/host-service-setting/host-service-setting';
+import { ResourceServiceSettingPage } from '../pages/user/settings/resource-service-setting/resource-service-setting';
 
-export function getRemoteServiceBaseUrl(): string {
-    return AppConsts.appBaseUrl;
+export function getRemoteServiceBaseUrl(injector: Injector): string {
+    const config = injector.get(ConfigManager);
+    config.load();
+    return config.settings.hostService;
 }
 
 @NgModule({
@@ -40,7 +45,10 @@ export function getRemoteServiceBaseUrl(): string {
         BangumiListPage,
         BangumiDetailPage,
         UserPage,
-        RecommendPage
+        RecommendPage,
+        SettingsPage,
+        HostServiceSettingPage,
+        ResourceServiceSettingPage
     ],
     imports: [
         BrowserModule,
@@ -64,14 +72,22 @@ export function getRemoteServiceBaseUrl(): string {
         BangumiListPage,
         BangumiDetailPage,
         UserPage,
-        RecommendPage
+        RecommendPage,
+        SettingsPage,
+        HostServiceSettingPage,
+        ResourceServiceSettingPage
     ],
     providers: [
         StatusBar,
         SplashScreen,
         ScreenOrientation,
+        ConfigManager,
         { provide: ErrorHandler, useClass: IonicErrorHandler },
-        { provide: API_BASE_URL, useFactory: getRemoteServiceBaseUrl }
+        {
+            provide: API_BASE_URL,
+            useFactory: getRemoteServiceBaseUrl,
+            deps: [Injector]
+        }
     ]
 })
 export class AppModule { }

@@ -4,7 +4,7 @@ import { BangumiListPage } from './bangumi-list/bangumi-list';
 import { BangumiDetailPage } from './bangumi-detail/bangumi-detail';
 import { BangumiServiceProxy, Bangumi, Anime, BannerServiceProxy, Banner } from '../../shared/service-proxies/service-proxies';
 import { BasePage } from '../base-page';
-import { AppConsts } from '../../shared/AppConsts';
+import { ConfigManager } from '../../shared/config-manager';
 
 @Component({
   selector: 'page-bangumi',
@@ -14,8 +14,8 @@ export class BangumiPage extends BasePage implements OnInit {
   @ViewChild("slides") slides: Slides;
   bangumis: Bangumi[] = [];
   banners: Banner[] = [];
-  coverUrl = `${AppConsts.appBaseUrl}/statics/imgs/covers/`;
-  bannerUrl = `${AppConsts.appBaseUrl}/statics/imgs/banners/`;
+  coverUrl: string;
+  bannerUrl: string;
   limit = 4;
   disableLoading = false;
 
@@ -23,9 +23,12 @@ export class BangumiPage extends BasePage implements OnInit {
     injector: Injector,
     public bangumiServiceProxy: BangumiServiceProxy,
     public bannerServiceProxy: BannerServiceProxy,
-    public navCtrl: NavController
+    public navCtrl: NavController,
+    public config: ConfigManager
   ) {
     super(injector);
+    this.coverUrl = `${config.settings.hostService}/statics/imgs/covers/`;
+    this.bannerUrl = `${config.settings.hostService}/statics/imgs/banners/`;
   }
 
   ngOnInit(): void {
