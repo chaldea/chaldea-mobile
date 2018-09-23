@@ -814,6 +814,7 @@ export class MediaMetaData implements IMediaMetaData {
     frameWidth: number | undefined;
     frameHeight: number | undefined;
     frameRate: number | undefined;
+    length: number | undefined;
 
     constructor(data?: IMediaMetaData) {
         if (data) {
@@ -830,6 +831,7 @@ export class MediaMetaData implements IMediaMetaData {
             this.frameWidth = data["frameWidth"];
             this.frameHeight = data["frameHeight"];
             this.frameRate = data["frameRate"];
+            this.length = data["length"];
         }
     }
 
@@ -845,6 +847,7 @@ export class MediaMetaData implements IMediaMetaData {
         data["frameWidth"] = this.frameWidth;
         data["frameHeight"] = this.frameHeight;
         data["frameRate"] = this.frameRate;
+        data["length"] = this.length;
         return data; 
     }
 }
@@ -854,6 +857,7 @@ export interface IMediaMetaData {
     frameWidth: number | undefined;
     frameHeight: number | undefined;
     frameRate: number | undefined;
+    length: number | undefined;
 }
 
 export class AddResourceDto implements IAddResourceDto {
