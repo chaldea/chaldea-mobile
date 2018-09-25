@@ -27,6 +27,7 @@ import { SettingsPage } from '../pages/user/settings/settings';
 import { ConfigManager } from '../shared/config-manager';
 import { HostServiceSettingPage } from '../pages/user/settings/host-service-setting/host-service-setting';
 import { ResourceServiceSettingPage } from '../pages/user/settings/resource-service-setting/resource-service-setting';
+import { LoginPage } from '../pages/user/login/login';
 
 export function getRemoteServiceBaseUrl(injector: Injector): string {
     const config = injector.get(ConfigManager);
@@ -48,7 +49,8 @@ export function getRemoteServiceBaseUrl(injector: Injector): string {
         RecommendPage,
         SettingsPage,
         HostServiceSettingPage,
-        ResourceServiceSettingPage
+        ResourceServiceSettingPage,
+        LoginPage
     ],
     imports: [
         BrowserModule,
@@ -75,7 +77,8 @@ export function getRemoteServiceBaseUrl(injector: Injector): string {
         RecommendPage,
         SettingsPage,
         HostServiceSettingPage,
-        ResourceServiceSettingPage
+        ResourceServiceSettingPage,
+        LoginPage
     ],
     providers: [
         StatusBar,
