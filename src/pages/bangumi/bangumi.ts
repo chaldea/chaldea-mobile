@@ -1,10 +1,17 @@
-import { Component, ViewChild, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { NavController, Slides } from 'ionic-angular';
-import { BangumiListPage } from './bangumi-list/bangumi-list';
-import { BangumiDetailPage } from './bangumi-detail/bangumi-detail';
-import { BangumiServiceProxy, Bangumi, Anime, BannerServiceProxy, Banner } from '../../shared/service-proxies/service-proxies';
-import { BasePage } from '../base-page';
+
 import { ConfigManager } from '../../shared/config-manager';
+import {
+  AnimeOutlineDto,
+  BangumiAnimesDto,
+  BangumiServiceProxy,
+  Banner,
+  BannerServiceProxy
+} from '../../shared/service-proxies/service-proxies';
+import { AnimeDetailPage } from '../anime/anime-detail/anime-detail';
+import { AnimeListPage } from '../anime/anime-list/anime-list';
+import { BasePage } from '../base-page';
 
 @Component({
   selector: 'page-bangumi',
@@ -12,11 +19,11 @@ import { ConfigManager } from '../../shared/config-manager';
 })
 export class BangumiPage extends BasePage implements OnInit {
   @ViewChild("slides") slides: Slides;
-  bangumis: Bangumi[] = [];
+  bangumiAnimes: BangumiAnimesDto[] = [];
   banners: Banner[] = [];
-  coverUrl: string;
-  bannerUrl: string;
+  imgUrl = '';
   limit = 4;
+  slice = 6;
   disableLoading = false;
 
   constructor(
@@ -27,8 +34,7 @@ export class BangumiPage extends BasePage implements OnInit {
     public config: ConfigManager
   ) {
     super(injector);
-    this.coverUrl = `${config.settings.hostService}/statics/imgs/covers/`;
-    this.bannerUrl = `${config.settings.hostService}/statics/imgs/banners/`;
+    this.imgUrl = `${config.settings.hostService}/statics/imgs/`;
   }
 
   ngOnInit(): void {
@@ -38,10 +44,10 @@ export class BangumiPage extends BasePage implements OnInit {
 
   getList(callback?: () => void): void {
     const self = this;
-    self.bangumiServiceProxy.getlist(self.bangumis.length, self.limit).subscribe((rep) => {
+    self.bangumiServiceProxy.getAnimes(self.bangumiAnimes.length, self.limit, self.slice).subscribe((rep) => {
       if (rep && rep.length > 0) {
         self.disableLoading = false;
-        self.bangumis = self.bangumis.concat(rep);
+        self.bangumiAnimes = self.bangumiAnimes.concat(rep);
       }
       else {
         self.disableLoading = true;
@@ -71,12 +77,12 @@ export class BangumiPage extends BasePage implements OnInit {
   //   this.slides.stopAutoplay();
   // }
 
-  showBangumiList(bangumi: Bangumi): void {
-    this.navCtrl.push(BangumiListPage, { bangumi: bangumi });
+  showBangumiList(bangumiAnimes: BangumiAnimesDto): void {
+    this.navCtrl.push(AnimeListPage, { bangumiId: bangumiAnimes.id, bangumiName: bangumiAnimes.name });
   }
 
-  showBangumiDetail(anime: Anime): void {
-    this.navCtrl.push(BangumiDetailPage, { anime: anime });
+  showBangumiDetail(anime: AnimeOutlineDto): void {
+    this.navCtrl.push(AnimeDetailPage, { animeId: anime.id });
   }
 
   // ionSlideAutoplayStop(): void {

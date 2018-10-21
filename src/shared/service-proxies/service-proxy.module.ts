@@ -4,9 +4,10 @@ import * as ApiServiceProxies from './service-proxies';
 
 @NgModule({
     providers: [
-        ApiServiceProxies.BangumiServiceProxy,
         ApiServiceProxies.AnimeServiceProxy,
-        ApiServiceProxies.BannerServiceProxy
+        ApiServiceProxies.BangumiServiceProxy,
+        ApiServiceProxies.BannerServiceProxy,
+        ApiServiceProxies.VideoServiceProxy
     ]
 })
 export class ServiceProxyModule { }

@@ -9,16 +9,16 @@
     <div class="info">
       <div class="info-left">
         <div class="cover">
-          <img-loader [src]="cover" useImg></img-loader>
+          <img-loader [src]="coverUrl" useImg></img-loader>
         </div>
         <div class="staff"></div>
       </div>
       <div class="info-right">
-        <div class="info-item">{{animeDetail.director}}/{{animeDetail.auth}}</div>
-        <div class="info-item">更新到{{latest}}({{animeDetail.state}})</div>
+        <div class="info-item">{{anime.director}}/{{anime.auth}}</div>
+        <div class="info-item">更新到{{latest}}({{anime.state}})</div>
         <div class="info-item">{{tags}}</div>
-        <div class="info-item">播放量：{{animeInfo.playCounts}}</div>
-        <div class="info-item">订阅人数：{{animeInfo.subCounts}}</div>
+        <div class="info-item">播放量：{{anime.playCounts}}</div>
+        <div class="info-item">订阅人数：{{anime.subCounts}}</div>
         <div class="info-item">
           <button>订阅</button>
           <button>继续</button>
@@ -26,29 +26,29 @@
       </div>
     </div>
     <div class="desc">
-      {{animeDetail.desc}}
+      {{anime.desc}}
     </div>
 
     <ion-segment [(ngModel)]="segment" color="primary">
-      <ion-segment-button value="anime">
+      <ion-segment-button value="video-page">
         动画
       </ion-segment-button>
-      <ion-segment-button value="comic">
+      <ion-segment-button value="comic-page">
         漫画
       </ion-segment-button>
-      <ion-segment-button value="novel">
+      <ion-segment-button value="novel-page">
         小说
       </ion-segment-button>
     </ion-segment>
   </div>
 
   <div class="blank-10"></div>
-  <anime #anime [hidden]="segment!='anime'" [resources]="animeDetail.animes"></anime>
-  <comic #comic [hidden]="segment!='comic'"></comic>
-  <novel #novel [hidden]="segment!='novel'"></novel>
+  <app-video #videoPage [hidden]="segment!='video-page'" [resources]="anime.videos"></app-video>
+  <app-comic #comicPage [hidden]="segment!='comic-page'"></app-comic>
+  <app-novel #novelPage [hidden]="segment!='novel-page'"></app-novel>
 
   <div class="blank-10"></div>
-  <comment #comment></comment>
+  <app-comment #commentPage></app-comment>
 </ion-content>
 
 <ion-footer>

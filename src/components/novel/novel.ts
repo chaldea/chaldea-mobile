@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'novel',
+  selector: 'app-novel',
   templateUrl: 'novel.html'
 })
 export class NovelComponent {

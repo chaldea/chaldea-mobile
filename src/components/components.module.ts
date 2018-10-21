@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { AnimeComponent } from './anime/anime';
+import { VideoComponent } from './video/video';
 import { BrowserModule } from '@angular/platform-browser';
 import { ComicComponent } from './comic/comic';
 import { NovelComponent } from './novel/novel';
@@ -10,7 +10,7 @@ import { MyApp } from '../app/app.component';
 
 @NgModule({
   declarations: [
-    AnimeComponent,
+    VideoComponent,
     ComicComponent,
     NovelComponent,
     CommentComponent,
@@ -21,7 +21,7 @@ import { MyApp } from '../app/app.component';
     IonicModule.forRoot(MyApp)
   ],
   exports: [
-    AnimeComponent,
+    VideoComponent,
     ComicComponent,
     NovelComponent,
     CommentComponent,

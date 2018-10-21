@@ -1,7 +1,7 @@
 import 'rxjs/add/observable/fromEvent';
 
 import { HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule, Injector } from '@angular/core';
+import { ErrorHandler, Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
@@ -12,22 +12,22 @@ import { IonicImageLoader } from 'ionic-image-loader';
 
 import { ComponentsModule } from '../components/components.module';
 import { AboutPage } from '../pages/about/about';
+import { AnimeDetailPage } from '../pages/anime/anime-detail/anime-detail';
+import { AnimeListPage } from '../pages/anime/anime-list/anime-list';
 import { BangumiPage } from '../pages/bangumi/bangumi';
-import { BangumiDetailPage } from '../pages/bangumi/bangumi-detail/bangumi-detail';
-import { BangumiListPage } from '../pages/bangumi/bangumi-list/bangumi-list';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { RecommendPage } from '../pages/recommend/recommend';
 import { TabsPage } from '../pages/tabs/tabs';
+import { LoginPage } from '../pages/user/login/login';
+import { HostServiceSettingPage } from '../pages/user/settings/host-service-setting/host-service-setting';
+import { ResourceServiceSettingPage } from '../pages/user/settings/resource-service-setting/resource-service-setting';
+import { SettingsPage } from '../pages/user/settings/settings';
 import { UserPage } from '../pages/user/user';
+import { ConfigManager } from '../shared/config-manager';
 import { API_BASE_URL } from '../shared/service-proxies/service-proxies';
 import { ServiceProxyModule } from '../shared/service-proxies/service-proxy.module';
 import { MyApp } from './app.component';
-import { SettingsPage } from '../pages/user/settings/settings';
-import { ConfigManager } from '../shared/config-manager';
-import { HostServiceSettingPage } from '../pages/user/settings/host-service-setting/host-service-setting';
-import { ResourceServiceSettingPage } from '../pages/user/settings/resource-service-setting/resource-service-setting';
-import { LoginPage } from '../pages/user/login/login';
 
 export function getRemoteServiceBaseUrl(injector: Injector): string {
     const config = injector.get(ConfigManager);
@@ -43,8 +43,8 @@ export function getRemoteServiceBaseUrl(injector: Injector): string {
         HomePage,
         TabsPage,
         BangumiPage,
-        BangumiListPage,
-        BangumiDetailPage,
+        AnimeListPage,
+        AnimeDetailPage,
         UserPage,
         RecommendPage,
         SettingsPage,
@@ -71,8 +71,8 @@ export function getRemoteServiceBaseUrl(injector: Injector): string {
         HomePage,
         TabsPage,
         BangumiPage,
-        BangumiListPage,
-        BangumiDetailPage,
+        AnimeListPage,
+        AnimeDetailPage,
         UserPage,
         RecommendPage,
         SettingsPage,

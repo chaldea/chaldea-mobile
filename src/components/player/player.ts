@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, AfterViewInit, trigger, state, style,
 import { NavParams, NavController, Platform } from 'ionic-angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { StatusBar } from '@ionic-native/status-bar';
-import { Resource } from '../../shared/service-proxies/service-proxies';
+import { VideoDto } from '../../shared/service-proxies/service-proxies';
 import { ConfigManager } from '../../shared/config-manager';
 
 export class VideoSource {
@@ -11,7 +11,7 @@ export class VideoSource {
 }
 
 @Component({
-    selector: 'player',
+    selector: 'app-player',
     templateUrl: 'player.html',
     animations: [
         trigger('control', [
@@ -31,7 +31,6 @@ export class VideoSource {
 })
 export class PlayerComponent implements AfterViewInit, OnDestroy {
     @ViewChild('progressBar') progressBarRef: ElementRef;
-    resource: Resource;
     videoContext: any;
     progressBar: HTMLInputElement;
     src: string;
@@ -49,6 +48,7 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
     beginX = 0;
     lastX = 0;
     percentCount = 0;
+    video: VideoDto;
 
     constructor(
         public navCtrl: NavController,
@@ -58,10 +58,10 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
         public statusBar: StatusBar,
         public config: ConfigManager
     ) {
-        this.resource = navParams.data['data'];
-        this.src = `${config.settings.resourceService}/${this.resource.url}`
-        this.title = this.resource.name;
-        this.duration = this.format(this.resource.metaData.duration);
+        this.video = navParams.data.video;
+        this.src = `${config.settings.resourceService}/${this.video.url}`
+        this.title = this.video.title;
+        this.duration = this.format(this.video.duration);
     }
 
     goBack(): void {
@@ -92,9 +92,9 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
 
     initPlayer(): void {
         const canvas = <any>document.getElementById('canvas');
-        if (this.resource.metaData) {
-            canvas.width = this.resource.metaData.frameWidth;
-            canvas.height = this.resource.metaData.frameHeight;
+        if (this.video.frameWidth && this.video.frameHeight) {
+            canvas.width = this.video.frameWidth;
+            canvas.height = this.video.frameHeight;
         } else {
             canvas.width = 1280;
             canvas.height = 720;

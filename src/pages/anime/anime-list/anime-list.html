@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{bangumi.name}}</ion-title>
+    <ion-title>{{bangumiName}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -13,7 +13,7 @@
   <div class="box">
     <div class="box-item" *ngFor="let anime of animes" (click)="showBangumiDetail(anime)">
       <div class="cover">
-        <img-loader [src]="coverUrl + anime.cover" useImg></img-loader>
+        <img-loader [src]="imgUrl + anime.cover" useImg></img-loader>
       </div>
       <div class="subtitle">
         {{anime.title}}

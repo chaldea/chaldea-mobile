@@ -1,19 +1,20 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
-import { Anime, AnimeServiceProxy, Bangumi } from '../../../shared/service-proxies/service-proxies';
+import { AnimeServiceProxy, AnimeOutlineDto } from '../../../shared/service-proxies/service-proxies';
 import { BasePage } from '../../base-page';
-import { BangumiDetailPage } from '../bangumi-detail/bangumi-detail';
 import { ConfigManager } from '../../../shared/config-manager';
+import { AnimeDetailPage } from '../anime-detail/anime-detail';
 
 @Component({
-  selector: 'page-bangumi-list',
-  templateUrl: 'bangumi-list.html'
+  selector: 'page-anime-list',
+  templateUrl: 'anime-list.html'
 })
-export class BangumiListPage extends BasePage implements OnInit {
-  bangumi: Bangumi;
-  animes: Anime[] = [];
-  coverUrl: string;
+export class AnimeListPage extends BasePage implements OnInit {
+  animes: AnimeOutlineDto[] = [];
+  bangumiId = '';
+  bangumiName = '';
+  imgUrl = '';
   limit = 12;
   disableLoading = false;
 
@@ -25,7 +26,7 @@ export class BangumiListPage extends BasePage implements OnInit {
     public config: ConfigManager
   ) {
     super(injector);
-    this.coverUrl = `${config.settings.hostService}/statics/imgs/covers/`;
+    this.imgUrl = `${config.settings.hostService}/statics/imgs/`;
   }
 
   ngOnInit(): void {
@@ -34,9 +35,10 @@ export class BangumiListPage extends BasePage implements OnInit {
 
   getList(callback?: () => void): void {
     const self = this;
-    self.bangumi = <Bangumi>self.navParams.data.bangumi;
-    if (self.bangumi && self.bangumi.id) {
-      self.animeServiceProxy.getlist(self.bangumi.id, self.animes.length, self.limit).subscribe((rep) => {
+    self.bangumiId = self.navParams.data.bangumiId;
+    self.bangumiName = self.navParams.data.bangumiName;
+    if (self.bangumiId) {
+      self.animeServiceProxy.getList(self.bangumiId, self.animes.length, self.limit).subscribe((rep) => {
         if (rep && rep.length > 0) {
           self.disableLoading = false;
           self.animes = self.animes.concat(rep);
@@ -50,8 +52,8 @@ export class BangumiListPage extends BasePage implements OnInit {
     }
   }
 
-  showBangumiDetail(anime: Anime): void {
-    this.navCtrl.push(BangumiDetailPage, { anime: anime });
+  showBangumiDetail(anime: AnimeOutlineDto): void {
+    this.navCtrl.push(AnimeDetailPage, { animeId: anime.id });
   }
 
   doRefresh(refresher): void {

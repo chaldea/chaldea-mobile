@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'comic',
+  selector: 'app-comic',
   templateUrl: 'comic.html'
 })
 export class ComicComponent {
