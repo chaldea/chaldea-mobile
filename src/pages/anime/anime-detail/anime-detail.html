@@ -43,9 +43,9 @@
   </div>
 
   <div class="blank-10"></div>
-  <app-video #videoPage [hidden]="segment!='video-page'" [resources]="anime.videos"></app-video>
-  <app-comic #comicPage [hidden]="segment!='comic-page'"></app-comic>
-  <app-novel #novelPage [hidden]="segment!='novel-page'"></app-novel>
+  <app-video #videoPage *ngIf="segment=='video-page' && anime.id" [resources]="anime.videos" [animeId]="anime.id"></app-video>
+  <app-comic #comicPage *ngIf="segment=='comic-page'"></app-comic>
+  <app-novel #novelPage *ngIf="segment=='novel-page'"></app-novel>
 
   <div class="blank-10"></div>
   <app-comment #commentPage></app-comment>

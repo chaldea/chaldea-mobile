@@ -3,10 +3,10 @@ import { NavController } from 'ionic-angular';
 import { AppSettings, SettingsService } from '../../../../shared/services/settings.service';
 
 @Component({
-    selector: 'page-resource-service-setting',
-    templateUrl: 'resource-service-setting.html',
+    selector: 'page-id-service-setting',
+    templateUrl: 'id-service-setting.html',
 })
-export class ResourceServiceSettingPage {
+export class IdServiceSettingPage {
     setting = AppSettings;
 
     constructor(

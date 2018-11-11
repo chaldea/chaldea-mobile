@@ -6,14 +6,22 @@
 <ion-content>
   <div class="blank-10"></div>
   <ion-list>
+    <button ion-item icon-start (tap)="showIdSetting()">
+      <ion-label>授权服务器</ion-label>
+      <ion-note item-end>{{setting.idServerUrl}}</ion-note>
+    </button>
     <button ion-item icon-start (tap)="showHostSetting()">
       <ion-label>主站服务器</ion-label>
-      <ion-note item-end>{{setting.hostService}}</ion-note>
+      <ion-note item-end>{{setting.apiServerUrl}}</ion-note>
     </button>
-    <button ion-item icon-start (tap)="showResourceSetting()">
+    <ion-item icon-start>
       <ion-label>资源服务器</ion-label>
-      <ion-note item-end>{{setting.resourceService}}</ion-note>
-    </button>
+      <!-- <ion-note item-end>{{setting.resServerUrl}}</ion-note> -->
+
+      <ion-select interface="popover" [(ngModel)]="setting.resServerUrl">
+        <ion-option (ionSelect)="selectNode()" *ngFor="let node of nodes" [value]="node.value">{{node.text}}</ion-option>
+      </ion-select>
+    </ion-item>
   </ion-list>
 
   <div class="blank-10"></div>

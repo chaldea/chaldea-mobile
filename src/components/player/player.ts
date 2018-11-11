@@ -1,9 +1,9 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, trigger, state, style, transition, animate, OnDestroy } from '@angular/core';
-import { NavParams, NavController, Platform } from 'ionic-angular';
+import { NavParams, NavController, Platform, Events } from 'ionic-angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { StatusBar } from '@ionic-native/status-bar';
 import { VideoDto } from '../../shared/service-proxies/service-proxies';
-import { ConfigManager } from '../../shared/config-manager';
+import { AppSettings } from '../../shared/services/settings.service';
 
 export class VideoSource {
     src: string;
@@ -51,15 +51,15 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
     video: VideoDto;
 
     constructor(
+        public events: Events,
         public navCtrl: NavController,
         public navParams: NavParams,
         public platform: Platform,
         public screenOrientation: ScreenOrientation,
-        public statusBar: StatusBar,
-        public config: ConfigManager
+        public statusBar: StatusBar
     ) {
         this.video = navParams.data.video;
-        this.src = `${config.settings.resourceService}/${this.video.url}`
+        this.src = `${AppSettings.resServerUrl}/${this.video.url}`
         this.title = this.video.title;
         this.duration = this.format(this.video.duration);
     }
@@ -86,8 +86,10 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
             this.statusBar.show();
         }
+        const currentTime = this.videoContext.currentTime;
         this.videoContext.pause();
         this.videoContext.reset();
+        this.events.publish('videoStopped', currentTime);
     }
 
     initPlayer(): void {
@@ -102,7 +104,6 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
 
         this.videoContext = new VideoContext(canvas, () => { console.error('Sorry, your browser not support WebGL'); });
         this.videoContext.registerCallback('stalled', () => {
-            // loading...
         });
         this.videoContext.registerCallback('update', (e) => {
             if (e == 0) {
@@ -115,14 +116,13 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
             }
         });
         this.videoContext.registerCallback('ended', () => {
-            // this.videoContext.pause();
-            // this.paused = true;
         });
         const videoNode = this.videoContext.video(this.src);
         videoNode.connect(this.videoContext.destination);
         videoNode.startAt(0);
         if (this.autoplay) {
             this.play();
+            this.videoContext.currentTime = this.video.currentTime;
         }
         this.hideControl();
     }

@@ -1,7 +1,7 @@
 import 'rxjs/add/observable/fromEvent';
 
-import { HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, Injector, NgModule } from '@angular/core';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
@@ -21,18 +21,19 @@ import { RecommendPage } from '../pages/recommend/recommend';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/user/login/login';
 import { HostServiceSettingPage } from '../pages/user/settings/host-service-setting/host-service-setting';
+import { IdServiceSettingPage } from '../pages/user/settings/id-service-setting/id-service-setting';
 import { ResourceServiceSettingPage } from '../pages/user/settings/resource-service-setting/resource-service-setting';
 import { SettingsPage } from '../pages/user/settings/settings';
 import { UserPage } from '../pages/user/user';
-import { ConfigManager } from '../shared/config-manager';
 import { API_BASE_URL } from '../shared/service-proxies/service-proxies';
 import { ServiceProxyModule } from '../shared/service-proxies/service-proxy.module';
+import { AppSettings, SettingsService } from '../shared/services/settings.service';
+import { RefreshTokenHttpInterceptor, TokenService } from '../shared/services/token.service';
 import { MyApp } from './app.component';
 
-export function getRemoteServiceBaseUrl(injector: Injector): string {
-    const config = injector.get(ConfigManager);
-    config.load();
-    return config.settings.hostService;
+export function getRemoteServiceBaseUrl(): string {
+    SettingsService.load();
+    return AppSettings.apiServerUrl;
 }
 
 @NgModule({
@@ -50,6 +51,7 @@ export function getRemoteServiceBaseUrl(injector: Injector): string {
         SettingsPage,
         HostServiceSettingPage,
         ResourceServiceSettingPage,
+        IdServiceSettingPage,
         LoginPage
     ],
     imports: [
@@ -78,19 +80,18 @@ export function getRemoteServiceBaseUrl(injector: Injector): string {
         SettingsPage,
         HostServiceSettingPage,
         ResourceServiceSettingPage,
+        IdServiceSettingPage,
         LoginPage
     ],
     providers: [
         StatusBar,
         SplashScreen,
         ScreenOrientation,
-        ConfigManager,
+        TokenService,
+        SettingsService,
+        { provide: HTTP_INTERCEPTORS, useClass: RefreshTokenHttpInterceptor, multi: true },
         { provide: ErrorHandler, useClass: IonicErrorHandler },
-        {
-            provide: API_BASE_URL,
-            useFactory: getRemoteServiceBaseUrl,
-            deps: [Injector]
-        }
+        { provide: API_BASE_URL, useFactory: getRemoteServiceBaseUrl }
     ]
 })
 export class AppModule { }

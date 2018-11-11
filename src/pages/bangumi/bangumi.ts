@@ -1,7 +1,6 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { NavController, Slides } from 'ionic-angular';
 
-import { ConfigManager } from '../../shared/config-manager';
 import {
   AnimeOutlineDto,
   BangumiAnimesDto,
@@ -9,6 +8,7 @@ import {
   Banner,
   BannerServiceProxy
 } from '../../shared/service-proxies/service-proxies';
+import { AppSettings } from '../../shared/services/settings.service';
 import { AnimeDetailPage } from '../anime/anime-detail/anime-detail';
 import { AnimeListPage } from '../anime/anime-list/anime-list';
 import { BasePage } from '../base-page';
@@ -30,11 +30,10 @@ export class BangumiPage extends BasePage implements OnInit {
     injector: Injector,
     public bangumiServiceProxy: BangumiServiceProxy,
     public bannerServiceProxy: BannerServiceProxy,
-    public navCtrl: NavController,
-    public config: ConfigManager
+    public navCtrl: NavController
   ) {
     super(injector);
-    this.imgUrl = `${config.settings.hostService}/statics/imgs/`;
+    this.imgUrl = `${AppSettings.apiServerUrl}/statics/imgs/`;
   }
 
   ngOnInit(): void {

@@ -8,7 +8,7 @@
 
 <ion-content>
     <div class="blank-10"></div>
-    <div class="thumbnail">
+    <div *ngIf="isLogin" class="thumbnail">
         <div class="stable">
             <div class="avatar">
                 <img src="./assets/imgs/avatar.jpg" alt="">
@@ -23,13 +23,13 @@
         </div>
     </div>
 
-    <!-- <div class="blank-10"></div>
-    <ion-list>
-        <button ion-item *ngFor="let item of items" icon-start>
-            <ion-icon [name]="'logo-' + item.icon" [ngStyle]="{'color': item.color}" item-start></ion-icon>
-            {{ item.title }}
-        </button>
-    </ion-list> -->
+    <div *ngIf="!isLogin" class="thumbnail">
+        <div class="login">
+            <button class="btn-reg" (click)="register()">注 册</button>
+            <span class="space-split"></span>
+            <button class="btn-login" (click)="login()">登 录</button>
+        </div>
+    </div>
 
     <div class="blank-10"></div>
     <ion-list>
@@ -60,5 +60,9 @@
             <ion-icon name="ios-create-outline" item-start [ngStyle]="{'color': '#78BD43'}"></ion-icon>
             意见反馈
         </button>
+    </ion-list>
+    <div class="blank-10"></div>
+    <ion-list *ngIf="isLogin">
+        <button class="logout" color="white" ion-button full (click)="logout()">退出登录</button>
     </ion-list>
 </ion-content>

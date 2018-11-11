@@ -3,8 +3,8 @@ import { NavController, NavParams } from 'ionic-angular';
 
 import { AnimeServiceProxy, AnimeOutlineDto } from '../../../shared/service-proxies/service-proxies';
 import { BasePage } from '../../base-page';
-import { ConfigManager } from '../../../shared/config-manager';
 import { AnimeDetailPage } from '../anime-detail/anime-detail';
+import { AppSettings } from '../../../shared/services/settings.service';
 
 @Component({
   selector: 'page-anime-list',
@@ -22,11 +22,10 @@ export class AnimeListPage extends BasePage implements OnInit {
     injector: Injector,
     public navCtrl: NavController,
     public navParams: NavParams,
-    public animeServiceProxy: AnimeServiceProxy,
-    public config: ConfigManager
+    public animeServiceProxy: AnimeServiceProxy
   ) {
     super(injector);
-    this.imgUrl = `${config.settings.hostService}/statics/imgs/`;
+    this.imgUrl = `${AppSettings.apiServerUrl}/statics/imgs/`;
   }
 
   ngOnInit(): void {

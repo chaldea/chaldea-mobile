@@ -1,22 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
-import { ConfigManager, SystemSettings } from '../../../shared/config-manager';
+import { AppSettings, SettingsService } from '../../../shared/services/settings.service';
 import { HostServiceSettingPage } from './host-service-setting/host-service-setting';
+import { IdServiceSettingPage } from './id-service-setting/id-service-setting';
 import { ResourceServiceSettingPage } from './resource-service-setting/resource-service-setting';
+import { NodeServiceProxy, DropdownItem } from '../../../shared/service-proxies/service-proxies';
 
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings.html',
 })
-export class SettingsPage {
-  setting: SystemSettings;
+export class SettingsPage implements OnInit {
+  setting = AppSettings;
+  nodes: DropdownItem[];
 
   constructor(
     public navCtrl: NavController,
-    public config: ConfigManager
+    public nodeServiceProxy: NodeServiceProxy
   ) {
-    this.setting = config.settings;
+  }
+
+  ngOnInit(): void {
+    this.getNodes();
+  }
+
+  getNodes(): void {
+    this.nodeServiceProxy.getNodes().subscribe((rep) => {
+      const data = rep.map(x => {
+        const item = new DropdownItem();
+        item.text = `http://${x.ip}`;
+        item.value = `http://${x.ip}`;
+        return item;
+      });
+      this.nodes = data;
+    });
+  }
+
+  selectNode(): void {
+    SettingsService.save();
+  }
+
+  showIdSetting(): void {
+    this.navCtrl.push(IdServiceSettingPage);
   }
 
   showHostSetting(): void {
@@ -28,10 +54,10 @@ export class SettingsPage {
   }
 
   enableAutoPlay(): void {
-    this.config.save();
+    SettingsService.save();
   }
 
   enableCache(): void {
-    this.config.save();
+    SettingsService.save();
   }
 }

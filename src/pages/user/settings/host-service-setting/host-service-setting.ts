@@ -1,24 +1,21 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-
-import { ConfigManager, SystemSettings } from '../../../../shared/config-manager';
+import { AppSettings, SettingsService } from '../../../../shared/services/settings.service';
 
 @Component({
     selector: 'page-host-service-setting',
     templateUrl: 'host-service-setting.html',
 })
 export class HostServiceSettingPage {
-    setting: SystemSettings;
+    setting = AppSettings;
 
     constructor(
-        public navCtrl: NavController,
-        public config: ConfigManager
+        public navCtrl: NavController
     ) {
-        this.setting = this.config.settings;
     }
 
     save(): void {
-        this.config.save();
+        SettingsService.save();
         this.navCtrl.pop();
     }
 }

@@ -1,5 +1,10 @@
 <ion-header>
     <ion-navbar>
+        <ion-buttons left>
+            <button ion-button icon-only (click)="goBack()">
+                <ion-icon name="ios-close"></ion-icon>
+            </button>
+        </ion-buttons>
         <ion-title mode="ios">
             登录
         </ion-title>
@@ -12,5 +17,24 @@
 </ion-header>
 
 <ion-content>
-    登陆
+    <ion-list>
+        <ion-item>
+            <ion-label>
+                <ion-icon name="ios-person-outline"></ion-icon>
+            </ion-label>
+            <ion-input type="text" [(ngModel)]="userName"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label>
+                <ion-icon name="ios-lock-outline"></ion-icon>
+            </ion-label>
+            <ion-input type="password" [(ngModel)]="password"></ion-input>
+        </ion-item>
+    </ion-list>
+    <div class="login">
+        <button class="btn-reg" (click)="register()">注 册</button>
+        <span class="space-split"></span>
+        <button class="btn-login" (click)="login()">登 录</button>
+    </div>
 </ion-content>

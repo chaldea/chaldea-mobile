@@ -1,0 +1,39 @@
+page-login {
+    .scroll-content {
+        background-color: $page-bg-color;
+    }
+    ion-icon {
+        font-size: 20px;
+    }
+    ion-input {
+        input {
+            font-size: 16px;
+        }
+    }
+    .login {
+        height: 60px;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        justify-content: space-around;
+        .space-split {
+            width: 10px;
+        }
+        button {
+            flex: 1;
+            height: 40px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .btn-reg {
+            background-color: #fbfbfb;
+            color: #fc7da1;
+            margin-left: 10px;
+        }
+        .btn-login {
+            background-color: #fb8dad;
+            color: #FFF;
+            margin-right: 10px;
+        }
+    }
+}

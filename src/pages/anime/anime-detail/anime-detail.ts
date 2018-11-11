@@ -3,7 +3,7 @@ import { NavController, NavParams } from 'ionic-angular';
 
 import { AnimeServiceProxy, AnimeDto } from '../../../shared/service-proxies/service-proxies';
 import { BasePage } from '../../base-page';
-import { ConfigManager } from '../../../shared/config-manager';
+import { AppSettings } from '../../../shared/services/settings.service';
 
 @Component({
   selector: 'page-anime-detail',
@@ -21,8 +21,7 @@ export class AnimeDetailPage extends BasePage implements OnInit {
     injector: Injector,
     public navCtrl: NavController,
     public navParams: NavParams,
-    public animeServiceProxy: AnimeServiceProxy,
-    public config: ConfigManager
+    public animeServiceProxy: AnimeServiceProxy
   ) {
     super(injector);
   }
@@ -33,7 +32,7 @@ export class AnimeDetailPage extends BasePage implements OnInit {
     if (self.animeId) {
       self.animeServiceProxy.getAnime(self.animeId).subscribe((rep) => {
         self.anime = rep;
-        self.coverUrl = `${self.config.settings.hostService}/statics/imgs/${self.anime.cover}`;
+        self.coverUrl = `${AppSettings.apiServerUrl}/statics/imgs/${self.anime.cover}`;
         if (self.anime.videos && self.anime.videos.length > 0) {
           self.latest = self.anime.videos[self.anime.videos.length - 1].name;
         }

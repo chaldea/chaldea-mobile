@@ -23,6 +23,115 @@ import * as moment from 'moment';
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 @Injectable()
+export class AccountServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @phoneNumber (optional) 
+     * @return Success
+     */
+    getCode(phoneNumber: string | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/account/getCode?";
+        if (phoneNumber !== undefined)
+            url_ += "phoneNumber=" + encodeURIComponent("" + phoneNumber) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetCode(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetCode(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetCode(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @input (optional) 
+     * @return Success
+     */
+    register(input: RegisterDto | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/account/register";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).flatMap((response_ : any) => {
+            return this.processRegister(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processRegister(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processRegister(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class AnimeServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -181,6 +290,58 @@ export class AnimeServiceProxy {
     }
 
     protected processUpdate(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @resources (optional) 
+     * @return Success
+     */
+    removeVideos(id: string, resources: string[] | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/anime/{id}/removeVideos";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(resources);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("delete", url_, options_).flatMap((response_ : any) => {
+            return this.processRemoveVideos(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processRemoveVideos(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processRemoveVideos(response: HttpResponse<Blob>): Observable<void> {
         const status = response.status; 
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -651,6 +812,123 @@ export class BannerServiceProxy {
             });
         }
         return Observable.of<Banner[]>(<any>null);
+    }
+}
+
+@Injectable()
+export class HistoryServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @input (optional) 
+     * @return Success
+     */
+    addOrUpdateHistory(input: HistoryDto | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/history/addOrUpdateHistory";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).flatMap((response_ : any) => {
+            return this.processAddOrUpdateHistory(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processAddOrUpdateHistory(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processAddOrUpdateHistory(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @animeId (optional) 
+     * @return Success
+     */
+    getAnimeHistories(animeId: string | null): Observable<HistoryDto[]> {
+        let url_ = this.baseUrl + "/api/history/getAnimeHistories?";
+        if (animeId !== undefined)
+            url_ += "animeId=" + encodeURIComponent("" + animeId) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetAnimeHistories(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetAnimeHistories(response_);
+                } catch (e) {
+                    return <Observable<HistoryDto[]>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<HistoryDto[]>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetAnimeHistories(response: HttpResponse<Blob>): Observable<HistoryDto[]> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(HistoryDto.fromJS(item));
+            }
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<HistoryDto[]>(<any>null);
     }
 }
 
@@ -1225,7 +1503,7 @@ export class NodeServiceProxy {
 }
 
 @Injectable()
-export class UserServiceProxy {
+export class TimetableServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -1236,13 +1514,17 @@ export class UserServiceProxy {
     }
 
     /**
+     * @input (optional) 
      * @return Success
      */
-    getUsers(): Observable<void> {
-        let url_ = this.baseUrl + "/api/user/getUsers";
+    createTimetable(input: Timetable | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/timetable/createTimetable";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(input);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
@@ -1250,12 +1532,12 @@ export class UserServiceProxy {
             })
         };
 
-        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
-            return this.processGetUsers(response_);
+        return this.http.request("put", url_, options_).flatMap((response_ : any) => {
+            return this.processCreateTimetable(response_);
         }).catch((response_: any) => {
             if (response_ instanceof HttpResponse) {
                 try {
-                    return this.processGetUsers(response_);
+                    return this.processCreateTimetable(response_);
                 } catch (e) {
                     return <Observable<void>><any>Observable.throw(e);
                 }
@@ -1264,7 +1546,7 @@ export class UserServiceProxy {
         });
     }
 
-    protected processGetUsers(response: HttpResponse<Blob>): Observable<void> {
+    protected processCreateTimetable(response: HttpResponse<Blob>): Observable<void> {
         const status = response.status; 
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -1278,6 +1560,339 @@ export class UserServiceProxy {
             });
         }
         return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @skip (optional) 
+     * @take (optional) 
+     * @return Success
+     */
+    getList(skip: number | null, take: number | null): Observable<TimetableDto[]> {
+        let url_ = this.baseUrl + "/api/timetable/getList?";
+        if (skip !== undefined)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&"; 
+        if (take !== undefined)
+            url_ += "take=" + encodeURIComponent("" + take) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetList(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetList(response_);
+                } catch (e) {
+                    return <Observable<TimetableDto[]>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<TimetableDto[]>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetList(response: HttpResponse<Blob>): Observable<TimetableDto[]> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(TimetableDto.fromJS(item));
+            }
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<TimetableDto[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getWeeks(): Observable<DropdownItem[]> {
+        let url_ = this.baseUrl + "/api/timetable/getWeeks";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetWeeks(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetWeeks(response_);
+                } catch (e) {
+                    return <Observable<DropdownItem[]>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<DropdownItem[]>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetWeeks(response: HttpResponse<Blob>): Observable<DropdownItem[]> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(DropdownItem.fromJS(item));
+            }
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<DropdownItem[]>(<any>null);
+    }
+}
+
+@Injectable()
+export class UserServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @skip (optional) 
+     * @take (optional) 
+     * @return Success
+     */
+    getUsers(skip: number | null, take: number | null): Observable<UserDto[]> {
+        let url_ = this.baseUrl + "/api/user/getUsers?";
+        if (skip !== undefined)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&"; 
+        if (take !== undefined)
+            url_ += "take=" + encodeURIComponent("" + take) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetUsers(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetUsers(response_);
+                } catch (e) {
+                    return <Observable<UserDto[]>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<UserDto[]>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetUsers(response: HttpResponse<Blob>): Observable<UserDto[]> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(UserDto.fromJS(item));
+            }
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<UserDto[]>(<any>null);
+    }
+
+    /**
+     * @input (optional) 
+     * @return Success
+     */
+    addUser(input: UserDto | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/user/addUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("put", url_, options_).flatMap((response_ : any) => {
+            return this.processAddUser(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processAddUser(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processAddUser(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    removeUser(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/user/{id}/removeUser";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("delete", url_, options_).flatMap((response_ : any) => {
+            return this.processRemoveUser(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processRemoveUser(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processRemoveUser(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getRoles(): Observable<DropdownItem[]> {
+        let url_ = this.baseUrl + "/api/user/getRoles";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetRoles(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetRoles(response_);
+                } catch (e) {
+                    return <Observable<DropdownItem[]>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<DropdownItem[]>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetRoles(response: HttpResponse<Blob>): Observable<DropdownItem[]> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(DropdownItem.fromJS(item));
+            }
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<DropdownItem[]>(<any>null);
     }
 }
 
@@ -1293,13 +1908,16 @@ export class VideoServiceProxy {
     }
 
     /**
+     * @animeId (optional) 
      * @return Success
      */
-    getVideo(id: string): Observable<VideoDto> {
-        let url_ = this.baseUrl + "/api/video/{id}/getVideo";
+    getVideoForPlayer(animeId: string | null, id: string): Observable<VideoDto> {
+        let url_ = this.baseUrl + "/api/video/{id}/getVideoForPlayer?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        if (animeId !== undefined)
+            url_ += "animeId=" + encodeURIComponent("" + animeId) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1312,11 +1930,11 @@ export class VideoServiceProxy {
         };
 
         return this.http.request("get", url_, options_).flatMap((response_ : any) => {
-            return this.processGetVideo(response_);
+            return this.processGetVideoForPlayer(response_);
         }).catch((response_: any) => {
             if (response_ instanceof HttpResponse) {
                 try {
-                    return this.processGetVideo(response_);
+                    return this.processGetVideoForPlayer(response_);
                 } catch (e) {
                     return <Observable<VideoDto>><any>Observable.throw(e);
                 }
@@ -1325,7 +1943,7 @@ export class VideoServiceProxy {
         });
     }
 
-    protected processGetVideo(response: HttpResponse<Blob>): Observable<VideoDto> {
+    protected processGetVideoForPlayer(response: HttpResponse<Blob>): Observable<VideoDto> {
         const status = response.status; 
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -1343,6 +1961,49 @@ export class VideoServiceProxy {
         }
         return Observable.of<VideoDto>(<any>null);
     }
+}
+
+export class RegisterDto implements IRegisterDto {
+    phoneNumber: string | undefined;
+    code: string | undefined;
+    password: string | undefined;
+
+    constructor(data?: IRegisterDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.phoneNumber = data["phoneNumber"];
+            this.code = data["code"];
+            this.password = data["password"];
+        }
+    }
+
+    static fromJS(data: any): RegisterDto {
+        let result = new RegisterDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["phoneNumber"] = this.phoneNumber;
+        data["code"] = this.code;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
+export interface IRegisterDto {
+    phoneNumber: string | undefined;
+    code: string | undefined;
+    password: string | undefined;
 }
 
 export class AnimeOutlineDto implements IAnimeOutlineDto {
@@ -1570,6 +2231,7 @@ export class AnimeTagDto implements IAnimeTagDto {
     types: string[] | undefined;
     tags: string[] | undefined;
     states: string[] | undefined;
+    levels: number[] | undefined;
 
     constructor(data?: IAnimeTagDto) {
         if (data) {
@@ -1597,6 +2259,11 @@ export class AnimeTagDto implements IAnimeTagDto {
                 for (let item of data["states"])
                     this.states.push(item);
             }
+            if (data["levels"] && data["levels"].constructor === Array) {
+                this.levels = [];
+                for (let item of data["levels"])
+                    this.levels.push(item);
+            }
         }
     }
 
@@ -1623,6 +2290,11 @@ export class AnimeTagDto implements IAnimeTagDto {
             for (let item of this.states)
                 data["states"].push(item);
         }
+        if (this.levels && this.levels.constructor === Array) {
+            data["levels"] = [];
+            for (let item of this.levels)
+                data["levels"].push(item);
+        }
         return data; 
     }
 }
@@ -1631,6 +2303,7 @@ export interface IAnimeTagDto {
     types: string[] | undefined;
     tags: string[] | undefined;
     states: string[] | undefined;
+    levels: number[] | undefined;
 }
 
 export class BangumiEditDto implements IBangumiEditDto {
@@ -1764,7 +2437,8 @@ export interface IBangumiAnimesDto {
 
 export class ImportBangumiDto implements IImportBangumiDto {
     clear: boolean | undefined;
-    url: string | undefined;
+    isFromFile: boolean | undefined;
+    resource: string | undefined;
 
     constructor(data?: IImportBangumiDto) {
         if (data) {
@@ -1778,7 +2452,8 @@ export class ImportBangumiDto implements IImportBangumiDto {
     init(data?: any) {
         if (data) {
             this.clear = data["clear"];
-            this.url = data["url"];
+            this.isFromFile = data["isFromFile"];
+            this.resource = data["resource"];
         }
     }
 
@@ -1791,14 +2466,16 @@ export class ImportBangumiDto implements IImportBangumiDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["clear"] = this.clear;
-        data["url"] = this.url;
+        data["isFromFile"] = this.isFromFile;
+        data["resource"] = this.resource;
         return data; 
     }
 }
 
 export interface IImportBangumiDto {
     clear: boolean | undefined;
-    url: string | undefined;
+    isFromFile: boolean | undefined;
+    resource: string | undefined;
 }
 
 export class Banner implements IBanner {
@@ -1845,6 +2522,53 @@ export interface IBanner {
     image: string | undefined;
     link: string | undefined;
     title: string | undefined;
+    id: string | undefined;
+}
+
+export class HistoryDto implements IHistoryDto {
+    currentTime: number | undefined;
+    resourceId: string | undefined;
+    animeId: string | undefined;
+    id: string | undefined;
+
+    constructor(data?: IHistoryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.currentTime = data["currentTime"];
+            this.resourceId = data["resourceId"];
+            this.animeId = data["animeId"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): HistoryDto {
+        let result = new HistoryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["currentTime"] = this.currentTime;
+        data["resourceId"] = this.resourceId;
+        data["animeId"] = this.animeId;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IHistoryDto {
+    currentTime: number | undefined;
+    resourceId: string | undefined;
+    animeId: string | undefined;
     id: string | undefined;
 }
 
@@ -2193,6 +2917,222 @@ export interface IPublishDirFileInfo {
     length: number | undefined;
 }
 
+export class Timetable implements ITimetable {
+    animeId: string | undefined;
+    sourceUrl: string | undefined;
+    sourcePwd: string | undefined;
+    beginDate: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
+    updateTime: string | undefined;
+    updateWeek: TimetableUpdateWeek | undefined;
+    id: string | undefined;
+
+    constructor(data?: ITimetable) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.animeId = data["animeId"];
+            this.sourceUrl = data["sourceUrl"];
+            this.sourcePwd = data["sourcePwd"];
+            this.beginDate = data["beginDate"] ? moment(data["beginDate"].toString()) : <any>undefined;
+            this.endDate = data["endDate"] ? moment(data["endDate"].toString()) : <any>undefined;
+            this.updateTime = data["updateTime"];
+            this.updateWeek = data["updateWeek"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): Timetable {
+        let result = new Timetable();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["animeId"] = this.animeId;
+        data["sourceUrl"] = this.sourceUrl;
+        data["sourcePwd"] = this.sourcePwd;
+        data["beginDate"] = this.beginDate ? this.beginDate.toISOString() : <any>undefined;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
+        data["updateTime"] = this.updateTime;
+        data["updateWeek"] = this.updateWeek;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface ITimetable {
+    animeId: string | undefined;
+    sourceUrl: string | undefined;
+    sourcePwd: string | undefined;
+    beginDate: moment.Moment | undefined;
+    endDate: moment.Moment | undefined;
+    updateTime: string | undefined;
+    updateWeek: TimetableUpdateWeek | undefined;
+    id: string | undefined;
+}
+
+export class TimetableDto implements ITimetableDto {
+    anime: AnimeOutlineDto | undefined;
+    sourceUrl: string | undefined;
+    sourcePwd: string | undefined;
+    updateTime: string | undefined;
+    updateWeek: TimetableDtoUpdateWeek | undefined;
+    weekName: string | undefined;
+    id: string | undefined;
+
+    constructor(data?: ITimetableDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.anime = data["anime"] ? AnimeOutlineDto.fromJS(data["anime"]) : <any>undefined;
+            this.sourceUrl = data["sourceUrl"];
+            this.sourcePwd = data["sourcePwd"];
+            this.updateTime = data["updateTime"];
+            this.updateWeek = data["updateWeek"];
+            this.weekName = data["weekName"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): TimetableDto {
+        let result = new TimetableDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["anime"] = this.anime ? this.anime.toJSON() : <any>undefined;
+        data["sourceUrl"] = this.sourceUrl;
+        data["sourcePwd"] = this.sourcePwd;
+        data["updateTime"] = this.updateTime;
+        data["updateWeek"] = this.updateWeek;
+        data["weekName"] = this.weekName;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface ITimetableDto {
+    anime: AnimeOutlineDto | undefined;
+    sourceUrl: string | undefined;
+    sourcePwd: string | undefined;
+    updateTime: string | undefined;
+    updateWeek: TimetableDtoUpdateWeek | undefined;
+    weekName: string | undefined;
+    id: string | undefined;
+}
+
+export class DropdownItem implements IDropdownItem {
+    text: string | undefined;
+    value: string | undefined;
+
+    constructor(data?: IDropdownItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.text = data["text"];
+            this.value = data["value"];
+        }
+    }
+
+    static fromJS(data: any): DropdownItem {
+        let result = new DropdownItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["text"] = this.text;
+        data["value"] = this.value;
+        return data; 
+    }
+}
+
+export interface IDropdownItem {
+    text: string | undefined;
+    value: string | undefined;
+}
+
+export class UserDto implements IUserDto {
+    role: string | undefined;
+    isActive: boolean | undefined;
+    email: string | undefined;
+    phoneNumber: string | undefined;
+    name: string | undefined;
+    id: string | undefined;
+
+    constructor(data?: IUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.role = data["role"];
+            this.isActive = data["isActive"];
+            this.email = data["email"];
+            this.phoneNumber = data["phoneNumber"];
+            this.name = data["name"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["role"] = this.role;
+        data["isActive"] = this.isActive;
+        data["email"] = this.email;
+        data["phoneNumber"] = this.phoneNumber;
+        data["name"] = this.name;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IUserDto {
+    role: string | undefined;
+    isActive: boolean | undefined;
+    email: string | undefined;
+    phoneNumber: string | undefined;
+    name: string | undefined;
+    id: string | undefined;
+}
+
 export class VideoDto implements IVideoDto {
     size: string | undefined;
     cover: string | undefined;
@@ -2202,6 +3142,7 @@ export class VideoDto implements IVideoDto {
     frameWidth: number | undefined;
     frameHeight: number | undefined;
     frameRate: number | undefined;
+    currentTime: number | undefined;
     id: string | undefined;
 
     constructor(data?: IVideoDto) {
@@ -2223,6 +3164,7 @@ export class VideoDto implements IVideoDto {
             this.frameWidth = data["frameWidth"];
             this.frameHeight = data["frameHeight"];
             this.frameRate = data["frameRate"];
+            this.currentTime = data["currentTime"];
             this.id = data["id"];
         }
     }
@@ -2243,6 +3185,7 @@ export class VideoDto implements IVideoDto {
         data["frameWidth"] = this.frameWidth;
         data["frameHeight"] = this.frameHeight;
         data["frameRate"] = this.frameRate;
+        data["currentTime"] = this.currentTime;
         data["id"] = this.id;
         return data; 
     }
@@ -2257,6 +3200,7 @@ export interface IVideoDto {
     frameWidth: number | undefined;
     frameHeight: number | undefined;
     frameRate: number | undefined;
+    currentTime: number | undefined;
     id: string | undefined;
 }
 
@@ -2273,6 +3217,26 @@ export enum DirFileInfoType {
 export enum PublishDirFileInfoType {
     _0 = 0, 
     _1 = 1, 
+}
+
+export enum TimetableUpdateWeek {
+    _0 = 0, 
+    _1 = 1, 
+    _2 = 2, 
+    _3 = 3, 
+    _4 = 4, 
+    _5 = 5, 
+    _6 = 6, 
+}
+
+export enum TimetableDtoUpdateWeek {
+    _0 = 0, 
+    _1 = 1, 
+    _2 = 2, 
+    _3 = 3, 
+    _4 = 4, 
+    _5 = 5, 
+    _6 = 6, 
 }
 
 export class SwaggerException extends Error {
