@@ -29,8 +29,8 @@ export class SettingsPage implements OnInit {
     this.nodeServiceProxy.getNodes().subscribe((rep) => {
       const data = rep.map(x => {
         const item = new DropdownItem();
-        item.text = `http://${x.ip}`;
-        item.value = `http://${x.ip}`;
+        item.text = `http://${x.ip}:9001`;
+        item.value = `http://${x.ip}:9001`;
         return item;
       });
       this.nodes = data;
