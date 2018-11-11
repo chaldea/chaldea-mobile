@@ -57,6 +57,7 @@ export class AnimeListPage extends BasePage implements OnInit {
 
   doRefresh(refresher): void {
     const self = this;
+    self.animes = [];
     self.getList(() => {
       refresher.complete();
     });

@@ -90,6 +90,7 @@ export class BangumiPage extends BasePage implements OnInit {
 
   doRefresh(refresher): void {
     const self = this;
+    self.bangumiAnimes = [];
     self.getList(() => {
       refresher.complete();
     });
