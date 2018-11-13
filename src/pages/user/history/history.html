@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>历史纪录</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="history-item" *ngFor="let history of histories">
+    <div class="thumbnail" (click)="showAnime(history.animeId)">
+      <img [src]="imgUrl + history.screenshot" alt="">
+      <span class="time">{{history.currentTime|time}}/{{history.duration|time}}</span>
+    </div>
+    <div class="wrapper">
+      <div class="title">{{history.animeTitle}}</div>
+      <div class="title">{{history.sourceTitle}}</div>
+      <div class="subtitle"></div>
+      <div class="subtitle">{{history.lastModificationTime|date:'yyyy-MM-dd HH:mm'}}</div>
+    </div>
+  </div>
+
+  <ion-infinite-scroll (ionInfinite)="loading($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

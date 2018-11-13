@@ -1,0 +1,41 @@
+page-history {
+    .scroll-content {
+        padding: 0px 13px;
+    }
+    .history-item {
+        padding: 13px 0px;
+        display: flex;
+        flex-direction: row;
+        @extend %border-normal-bottom;
+        .thumbnail {
+            width: 140px;
+            height: 80px;
+            img {
+                width: 100%;
+                height: 100%;
+                border-radius: 7px;
+            }
+            .time {
+                height: 20px;
+                position: relative;
+                top: -22px;
+                left: 40px;
+                color: #FFF;
+            }
+        }
+        .wrapper {
+            flex: 1;
+            margin-left: 10px;
+            div {
+                height: 20px;
+                line-height: 20px;
+            }
+            .title {
+                color: #212121;
+            }
+            .subtitle {
+                color: #a1a1a1;
+            }
+        }
+    }
+}

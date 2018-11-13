@@ -876,6 +876,65 @@ export class HistoryServiceProxy {
     }
 
     /**
+     * @skip (optional) 
+     * @take (optional) 
+     * @return Success
+     */
+    getHistories(skip: number | null, take: number | null): Observable<HistoryDetailDto[]> {
+        let url_ = this.baseUrl + "/api/history/getHistories?";
+        if (skip !== undefined)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&"; 
+        if (take !== undefined)
+            url_ += "take=" + encodeURIComponent("" + take) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetHistories(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetHistories(response_);
+                } catch (e) {
+                    return <Observable<HistoryDetailDto[]>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<HistoryDetailDto[]>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetHistories(response: HttpResponse<Blob>): Observable<HistoryDetailDto[]> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(HistoryDetailDto.fromJS(item));
+            }
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<HistoryDetailDto[]>(<any>null);
+    }
+
+    /**
      * @animeId (optional) 
      * @return Success
      */
@@ -2528,6 +2587,7 @@ export interface IBanner {
 export class HistoryDto implements IHistoryDto {
     currentTime: number | undefined;
     resourceId: string | undefined;
+    screenshot: string | undefined;
     animeId: string | undefined;
     id: string | undefined;
 
@@ -2544,6 +2604,7 @@ export class HistoryDto implements IHistoryDto {
         if (data) {
             this.currentTime = data["currentTime"];
             this.resourceId = data["resourceId"];
+            this.screenshot = data["screenshot"];
             this.animeId = data["animeId"];
             this.id = data["id"];
         }
@@ -2559,6 +2620,7 @@ export class HistoryDto implements IHistoryDto {
         data = typeof data === 'object' ? data : {};
         data["currentTime"] = this.currentTime;
         data["resourceId"] = this.resourceId;
+        data["screenshot"] = this.screenshot;
         data["animeId"] = this.animeId;
         data["id"] = this.id;
         return data; 
@@ -2568,7 +2630,71 @@ export class HistoryDto implements IHistoryDto {
 export interface IHistoryDto {
     currentTime: number | undefined;
     resourceId: string | undefined;
+    screenshot: string | undefined;
     animeId: string | undefined;
+    id: string | undefined;
+}
+
+export class HistoryDetailDto implements IHistoryDetailDto {
+    duration: number | undefined;
+    currentTime: number | undefined;
+    animeId: string | undefined;
+    animeTitle: string | undefined;
+    sourceTitle: string | undefined;
+    screenshot: string | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    id: string | undefined;
+
+    constructor(data?: IHistoryDetailDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.duration = data["duration"];
+            this.currentTime = data["currentTime"];
+            this.animeId = data["animeId"];
+            this.animeTitle = data["animeTitle"];
+            this.sourceTitle = data["sourceTitle"];
+            this.screenshot = data["screenshot"];
+            this.lastModificationTime = data["lastModificationTime"] ? moment(data["lastModificationTime"].toString()) : <any>undefined;
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): HistoryDetailDto {
+        let result = new HistoryDetailDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["duration"] = this.duration;
+        data["currentTime"] = this.currentTime;
+        data["animeId"] = this.animeId;
+        data["animeTitle"] = this.animeTitle;
+        data["sourceTitle"] = this.sourceTitle;
+        data["screenshot"] = this.screenshot;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IHistoryDetailDto {
+    duration: number | undefined;
+    currentTime: number | undefined;
+    animeId: string | undefined;
+    animeTitle: string | undefined;
+    sourceTitle: string | undefined;
+    screenshot: string | undefined;
+    lastModificationTime: moment.Moment | undefined;
     id: string | undefined;
 }
 

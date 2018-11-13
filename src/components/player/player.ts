@@ -49,6 +49,7 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
     lastX = 0;
     percentCount = 0;
     video: VideoDto;
+    canvas: any;
 
     constructor(
         public events: Events,
@@ -65,6 +66,7 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     goBack(): void {
+        console.log('press goback.');
         this.navCtrl.pop();
     }
 
@@ -81,28 +83,27 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.videoContext.pause();
+        this.videoContext.reset();
+        this.events.publish('videoStopped', this.videoContext.currentTime, this.canvas.toDataURL('image/jpeg', 0.1));
         if (this.platform.is('cordova')) {
             this.screenOrientation.unlock();
             this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
             this.statusBar.show();
         }
-        const currentTime = this.videoContext.currentTime;
-        this.videoContext.pause();
-        this.videoContext.reset();
-        this.events.publish('videoStopped', currentTime);
     }
 
     initPlayer(): void {
-        const canvas = <any>document.getElementById('canvas');
+        this.canvas = <any>document.getElementById('canvas');
         if (this.video.frameWidth && this.video.frameHeight) {
-            canvas.width = this.video.frameWidth;
-            canvas.height = this.video.frameHeight;
+            this.canvas.width = this.video.frameWidth;
+            this.canvas.height = this.video.frameHeight;
         } else {
-            canvas.width = 1280;
-            canvas.height = 720;
+            this.canvas.width = 1280;
+            this.canvas.height = 720;
         }
 
-        this.videoContext = new VideoContext(canvas, () => { console.error('Sorry, your browser not support WebGL'); });
+        this.videoContext = new VideoContext(this.canvas, () => { console.error('Sorry, your browser not support WebGL'); });
         this.videoContext.registerCallback('stalled', () => {
         });
         this.videoContext.registerCallback('update', (e) => {

@@ -3,6 +3,7 @@ import { NavController, ModalController, Events, AlertController } from 'ionic-a
 import { SettingsPage } from './settings/settings';
 import { LoginPage } from './login/login';
 import { TokenService } from '../../shared/services/token.service';
+import { HistoryPage } from './history/history';
 
 @Component({
     selector: 'page-user',
@@ -22,6 +23,10 @@ export class UserPage {
             this.isLogin = arg;
         });
         this.isLogin = tokenService.hasToken();
+    }
+
+    showHistory(): void {
+        this.navCtrl.push(HistoryPage);
     }
 
     showSettings(): void {

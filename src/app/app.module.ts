@@ -19,6 +19,7 @@ import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { RecommendPage } from '../pages/recommend/recommend';
 import { TabsPage } from '../pages/tabs/tabs';
+import { HistoryPage } from '../pages/user/history/history';
 import { LoginPage } from '../pages/user/login/login';
 import { HostServiceSettingPage } from '../pages/user/settings/host-service-setting/host-service-setting';
 import { IdServiceSettingPage } from '../pages/user/settings/id-service-setting/id-service-setting';
@@ -30,6 +31,7 @@ import { ServiceProxyModule } from '../shared/service-proxies/service-proxy.modu
 import { AppSettings, SettingsService } from '../shared/services/settings.service';
 import { RefreshTokenHttpInterceptor, TokenService } from '../shared/services/token.service';
 import { MyApp } from './app.component';
+import { TimePipe } from '../shared/services/time.pipe';
 
 export function getRemoteServiceBaseUrl(): string {
     SettingsService.load();
@@ -52,7 +54,9 @@ export function getRemoteServiceBaseUrl(): string {
         HostServiceSettingPage,
         ResourceServiceSettingPage,
         IdServiceSettingPage,
-        LoginPage
+        LoginPage,
+        HistoryPage,
+        TimePipe
     ],
     imports: [
         BrowserModule,
@@ -81,7 +85,8 @@ export function getRemoteServiceBaseUrl(): string {
         HostServiceSettingPage,
         ResourceServiceSettingPage,
         IdServiceSettingPage,
-        LoginPage
+        LoginPage,
+        HistoryPage
     ],
     providers: [
         StatusBar,

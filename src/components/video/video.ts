@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Injector } from '@angular/core';
+import { Component, Input, OnInit, Injector, OnDestroy } from '@angular/core';
 import { Events, ModalController } from 'ionic-angular';
 
 import { HistoryDto, HistoryServiceProxy, Resource, VideoServiceProxy } from '../../shared/service-proxies/service-proxies';
@@ -9,7 +9,7 @@ import { BaseComponent } from '../base.component';
   selector: 'app-video',
   templateUrl: 'video.html'
 })
-export class VideoComponent extends BaseComponent implements OnInit {
+export class VideoComponent extends BaseComponent implements OnInit, OnDestroy {
   @Input() animeId: string;
   @Input() resources: Resource[];
   selected: Resource;
@@ -23,11 +23,14 @@ export class VideoComponent extends BaseComponent implements OnInit {
   ) {
     super(injector);
     const self = this;
-    events.subscribe('videoStopped', (arg) => {
+    events.subscribe('videoStopped', (currentTime, screenshot) => {
+      console.log('Event videoStopped is triggered.');
+      if (!self.selected) return;
       const history = new HistoryDto();
       history.animeId = self.animeId;
       history.resourceId = self.selected.id;
-      history.currentTime = Math.floor(arg);
+      history.currentTime = Math.floor(currentTime);
+      history.screenshot = screenshot;
       historyServiceProxy.addOrUpdateHistory(history).subscribe(() => {
         console.log('add history successfully.');
       });
@@ -49,6 +52,11 @@ export class VideoComponent extends BaseComponent implements OnInit {
         }
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.events.unsubscribe('videoStopped');
+    console.log('Event videoStopped is unsubscribed.');
   }
 
   play(resource: Resource): void {
