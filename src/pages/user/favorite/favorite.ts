@@ -1,38 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import { InfiniteScroll, NavController } from 'ionic-angular';
 
-import { HistoryDetailDto, HistoryServiceProxy } from '../../../shared/service-proxies/service-proxies';
+import { FavoriteDto, FavoriteServiceProxy } from '../../../shared/service-proxies/service-proxies';
 import { AppConsts } from '../../../shared/services/settings.service';
 import { AnimeDetailPage } from '../../anime/anime-detail/anime-detail';
 
 @Component({
-  selector: 'page-history',
-  templateUrl: 'history.html',
+  selector: 'page-favorite',
+  templateUrl: 'favorite.html',
 })
-export class HistoryPage implements OnInit {
-  histories: HistoryDetailDto[] = [];
+export class FavoritePage implements OnInit {
+  favorites: FavoriteDto[] = [];
   imgUrl: string;
   disableLoading = false;
   infiniteScroll: InfiniteScroll;
 
   constructor(
     public navCtrl: NavController,
-    public historyServiceProxy: HistoryServiceProxy
+    public favoriteServiceProxy: FavoriteServiceProxy
   ) {
-    this.imgUrl = AppConsts.historyImgUrl;
+    this.imgUrl = AppConsts.coverImgUrl;
   }
 
   ngOnInit(): void {
-    this.getHistories();
+    this.getFavorites();
   }
 
-  getHistories(callback?: () => void): void {
+  getFavorites(callback?: () => void): void {
     const self = this;
-    self.historyServiceProxy.getHistories(self.histories.length, 6)
+    self.favoriteServiceProxy.getFavorites(self.favorites.length, 6)
       .subscribe((rep) => {
         if (rep && rep.length > 0) {
           self.disableLoading = false;
-          self.histories = self.histories.concat(rep);
+          self.favorites = self.favorites.concat(rep);
         }
         else {
           self.disableLoading = true;
@@ -47,11 +47,11 @@ export class HistoryPage implements OnInit {
 
   doRefresh(refresher): void {
     const self = this;
-    self.histories = [];
+    self.favorites = [];
     if (self.disableLoading) {
       self.infiniteScroll.enable(true);
     }
-    self.getHistories(() => {
+    self.getFavorites(() => {
       refresher.complete();
     });
   }
@@ -64,7 +64,7 @@ export class HistoryPage implements OnInit {
       console.log('已经到最后');
       return;
     }
-    self.getHistories(() => {
+    self.getFavorites(() => {
       console.log('loading...');
       infiniteScroll.complete();
     });

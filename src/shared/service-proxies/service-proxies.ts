@@ -816,6 +816,173 @@ export class BannerServiceProxy {
 }
 
 @Injectable()
+export class FavoriteServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @animeId (optional) 
+     * @return Success
+     */
+    subscribe(animeId: string | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/favorite/subscribe?";
+        if (animeId !== undefined)
+            url_ += "animeId=" + encodeURIComponent("" + animeId) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).flatMap((response_ : any) => {
+            return this.processSubscribe(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processSubscribe(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processSubscribe(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @animeId (optional) 
+     * @return Success
+     */
+    unSubscribe(animeId: string | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/favorite/unSubscribe?";
+        if (animeId !== undefined)
+            url_ += "animeId=" + encodeURIComponent("" + animeId) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).flatMap((response_ : any) => {
+            return this.processUnSubscribe(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processUnSubscribe(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processUnSubscribe(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @skip (optional) 
+     * @take (optional) 
+     * @return Success
+     */
+    getFavorites(skip: number | null, take: number | null): Observable<FavoriteDto[]> {
+        let url_ = this.baseUrl + "/api/favorite/getFavorites?";
+        if (skip !== undefined)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&"; 
+        if (take !== undefined)
+            url_ += "take=" + encodeURIComponent("" + take) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetFavorites(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetFavorites(response_);
+                } catch (e) {
+                    return <Observable<FavoriteDto[]>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<FavoriteDto[]>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetFavorites(response: HttpResponse<Blob>): Observable<FavoriteDto[]> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(FavoriteDto.fromJS(item));
+            }
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<FavoriteDto[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class HistoryServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -1032,6 +1199,51 @@ export class MigrateServiceProxy {
     }
 
     protected processMigrateAnimeTags(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    migrateHistories(): Observable<void> {
+        let url_ = this.baseUrl + "/api/migrate/migrateHistories";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processMigrateHistories(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processMigrateHistories(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processMigrateHistories(response: HttpResponse<Blob>): Observable<void> {
         const status = response.status; 
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -2126,6 +2338,7 @@ export class AnimeDto implements IAnimeDto {
     comics: Resource[] | undefined;
     novels: Resource[] | undefined;
     comments: string[] | undefined;
+    isSubscribed: boolean | undefined;
 
     constructor(data?: IAnimeDto) {
         if (data) {
@@ -2175,6 +2388,7 @@ export class AnimeDto implements IAnimeDto {
                 for (let item of data["comments"])
                     this.comments.push(item);
             }
+            this.isSubscribed = data["isSubscribed"];
         }
     }
 
@@ -2223,6 +2437,7 @@ export class AnimeDto implements IAnimeDto {
             for (let item of this.comments)
                 data["comments"].push(item);
         }
+        data["isSubscribed"] = this.isSubscribed;
         return data; 
     }
 }
@@ -2245,6 +2460,7 @@ export interface IAnimeDto {
     comics: Resource[] | undefined;
     novels: Resource[] | undefined;
     comments: string[] | undefined;
+    isSubscribed: boolean | undefined;
 }
 
 export class Resource implements IResource {
@@ -2584,8 +2800,65 @@ export interface IBanner {
     id: string | undefined;
 }
 
+export class FavoriteDto implements IFavoriteDto {
+    id: string | undefined;
+    title: string | undefined;
+    cover: string | undefined;
+    lastUpdate: string | undefined;
+    currentPlay: string | undefined;
+    animeId: string | undefined;
+
+    constructor(data?: IFavoriteDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.title = data["title"];
+            this.cover = data["cover"];
+            this.lastUpdate = data["lastUpdate"];
+            this.currentPlay = data["currentPlay"];
+            this.animeId = data["animeId"];
+        }
+    }
+
+    static fromJS(data: any): FavoriteDto {
+        let result = new FavoriteDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["cover"] = this.cover;
+        data["lastUpdate"] = this.lastUpdate;
+        data["currentPlay"] = this.currentPlay;
+        data["animeId"] = this.animeId;
+        return data; 
+    }
+}
+
+export interface IFavoriteDto {
+    id: string | undefined;
+    title: string | undefined;
+    cover: string | undefined;
+    lastUpdate: string | undefined;
+    currentPlay: string | undefined;
+    animeId: string | undefined;
+}
+
 export class HistoryDto implements IHistoryDto {
     currentTime: number | undefined;
+    duration: number | undefined;
+    sourceTitle: string | undefined;
     resourceId: string | undefined;
     screenshot: string | undefined;
     animeId: string | undefined;
@@ -2603,6 +2876,8 @@ export class HistoryDto implements IHistoryDto {
     init(data?: any) {
         if (data) {
             this.currentTime = data["currentTime"];
+            this.duration = data["duration"];
+            this.sourceTitle = data["sourceTitle"];
             this.resourceId = data["resourceId"];
             this.screenshot = data["screenshot"];
             this.animeId = data["animeId"];
@@ -2619,6 +2894,8 @@ export class HistoryDto implements IHistoryDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["currentTime"] = this.currentTime;
+        data["duration"] = this.duration;
+        data["sourceTitle"] = this.sourceTitle;
         data["resourceId"] = this.resourceId;
         data["screenshot"] = this.screenshot;
         data["animeId"] = this.animeId;
@@ -2629,6 +2906,8 @@ export class HistoryDto implements IHistoryDto {
 
 export interface IHistoryDto {
     currentTime: number | undefined;
+    duration: number | undefined;
+    sourceTitle: string | undefined;
     resourceId: string | undefined;
     screenshot: string | undefined;
     animeId: string | undefined;
@@ -2935,6 +3214,7 @@ export interface ISyncDirectory {
 
 export class PublishResourceDto implements IPublishResourceDto {
     animeId: string | undefined;
+    clean: boolean | undefined;
     publishFiles: PublishDirFileInfo[] | undefined;
 
     constructor(data?: IPublishResourceDto) {
@@ -2949,6 +3229,7 @@ export class PublishResourceDto implements IPublishResourceDto {
     init(data?: any) {
         if (data) {
             this.animeId = data["animeId"];
+            this.clean = data["clean"];
             if (data["publishFiles"] && data["publishFiles"].constructor === Array) {
                 this.publishFiles = [];
                 for (let item of data["publishFiles"])
@@ -2966,6 +3247,7 @@ export class PublishResourceDto implements IPublishResourceDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["animeId"] = this.animeId;
+        data["clean"] = this.clean;
         if (this.publishFiles && this.publishFiles.constructor === Array) {
             data["publishFiles"] = [];
             for (let item of this.publishFiles)
@@ -2977,6 +3259,7 @@ export class PublishResourceDto implements IPublishResourceDto {
 
 export interface IPublishResourceDto {
     animeId: string | undefined;
+    clean: boolean | undefined;
     publishFiles: PublishDirFileInfo[] | undefined;
 }
 

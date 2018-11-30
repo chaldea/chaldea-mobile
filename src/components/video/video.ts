@@ -23,14 +23,16 @@ export class VideoComponent extends BaseComponent implements OnInit, OnDestroy {
   ) {
     super(injector);
     const self = this;
-    events.subscribe('videoStopped', (currentTime, screenshot) => {
+    events.subscribe('videoStopped', (data) => {
       console.log('Event videoStopped is triggered.');
       if (!self.selected) return;
       const history = new HistoryDto();
       history.animeId = self.animeId;
       history.resourceId = self.selected.id;
-      history.currentTime = Math.floor(currentTime);
-      history.screenshot = screenshot;
+      history.currentTime = Math.floor(data.currentTime);
+      history.screenshot = data.screenshot;
+      history.duration = data.duration;
+      history.sourceTitle = data.sourceTitle;
       historyServiceProxy.addOrUpdateHistory(history).subscribe(() => {
         console.log('add history successfully.');
       });
@@ -60,9 +62,11 @@ export class VideoComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   play(resource: Resource): void {
-    this.selected = resource;
-    this.videoServiceProxy.getVideoForPlayer(this.animeId, resource.id).subscribe((video) => {
-      const profileModal = this.modalCtrl.create(PlayerComponent, {
+    const self = this;
+    resource['visited'] = true;
+    self.selected = resource;
+    self.videoServiceProxy.getVideoForPlayer(self.animeId, resource.id).subscribe((video) => {
+      const profileModal = self.modalCtrl.create(PlayerComponent, {
         video: video
       }, {
           showBackdrop: false

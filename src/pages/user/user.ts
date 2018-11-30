@@ -1,18 +1,25 @@
-import { Component } from '@angular/core';
-import { NavController, ModalController, Events, AlertController } from 'ionic-angular';
-import { SettingsPage } from './settings/settings';
-import { LoginPage } from './login/login';
+import { Component, Injector, OnDestroy } from '@angular/core';
+import { AlertController, Events, ModalController, NavController } from 'ionic-angular';
+
 import { TokenService } from '../../shared/services/token.service';
 import { HistoryPage } from './history/history';
+import { LoginPage } from './login/login';
+import { SettingsPage } from './settings/settings';
+import { AppConsts } from '../../shared/services/settings.service';
+import { FavoritePage } from './favorite/favorite';
+import { AchievementPage } from './achievement/achievement';
+import { MessagePage } from './message/message';
 
 @Component({
     selector: 'page-user',
     templateUrl: 'user.html'
 })
-export class UserPage {
+export class UserPage implements OnDestroy {
     isLogin = false;
+    avatar = AppConsts.userImgUrl + 'avatar.jpg';
 
     constructor(
+        public injector: Injector,
         public events: Events,
         public navCtrl: NavController,
         public modalCtrl: ModalController,
@@ -25,8 +32,24 @@ export class UserPage {
         this.isLogin = tokenService.hasToken();
     }
 
+    ngOnDestroy(): void {
+        this.events.unsubscribe('logined');
+    }
+
     showHistory(): void {
         this.navCtrl.push(HistoryPage);
+    }
+
+    showFavorite(): void {
+        this.navCtrl.push(FavoritePage);
+    }
+
+    showAchievement(): void {
+        this.navCtrl.push(AchievementPage);
+    }
+
+    showMessage(): void {
+        this.navCtrl.push(MessagePage);
     }
 
     showSettings(): void {

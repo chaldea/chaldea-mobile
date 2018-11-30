@@ -1,0 +1,48 @@
+page-favorite {
+    .scroll-content {
+        padding: 0px 10px;
+    }
+    .history-item {
+        padding: 10px 0px;
+        display: flex;
+        flex-direction: row;
+        .thumbnail {
+            width: 100px;
+            max-height: 130px;
+            img {
+                height: 100%;
+                border-radius: 7px;
+            }
+            .ribbon {
+                position: relative;
+                top: -133px;
+                left: 58px;
+                width: 40px;
+                font-size: 12px;
+                font-weight: bold;
+                background-color: #ea7a99;
+                text-align: center;
+                color: #FFF;
+                border-radius: 0 7px 0 7px;
+            }
+        }
+        .wrapper {
+            flex: 1;
+            margin-left: 10px;
+            display: flex;
+            flex-direction: column;
+            .title {
+                height: 30px;
+                line-height: 30px;
+                font-size: 15px;
+                color: #212121;
+                margin-top: 15px;
+            }
+            .subtitle {
+                height: 25px;
+                line-height: 25px;
+                color: #a1a1a1;
+            }
+        }
+    }
+}

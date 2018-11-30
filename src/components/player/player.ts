@@ -84,7 +84,12 @@ export class PlayerComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.videoContext.pause();
-        this.events.publish('videoStopped', this.videoContext.currentTime, this.canvas.toDataURL('image/jpeg', 0.1));
+        this.events.publish('videoStopped', {
+            sourceTitle: this.video.title,
+            duration: this.video.duration,
+            currentTime: this.videoContext.currentTime,
+            screenshot: this.canvas.toDataURL('image/jpeg', 0.1)
+        });
         this.videoContext.reset();
         if (this.platform.is('cordova')) {
             this.screenOrientation.unlock();

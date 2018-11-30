@@ -9,7 +9,8 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.BannerServiceProxy,
         ApiServiceProxies.VideoServiceProxy,
         ApiServiceProxies.NodeServiceProxy,
-        ApiServiceProxies.HistoryServiceProxy
+        ApiServiceProxies.HistoryServiceProxy,
+        ApiServiceProxies.FavoriteServiceProxy
     ]
 })
 export class ServiceProxyModule { }

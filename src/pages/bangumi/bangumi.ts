@@ -1,14 +1,14 @@
 import { Component, Injector, OnInit, ViewChild } from '@angular/core';
-import { NavController, Slides } from 'ionic-angular';
+import { InfiniteScroll, NavController, Slides } from 'ionic-angular';
 
 import {
   AnimeOutlineDto,
   BangumiAnimesDto,
   BangumiServiceProxy,
   Banner,
-  BannerServiceProxy
+  BannerServiceProxy,
 } from '../../shared/service-proxies/service-proxies';
-import { AppSettings } from '../../shared/services/settings.service';
+import { AppConsts } from '../../shared/services/settings.service';
 import { AnimeDetailPage } from '../anime/anime-detail/anime-detail';
 import { AnimeListPage } from '../anime/anime-list/anime-list';
 import { BasePage } from '../base-page';
@@ -25,6 +25,8 @@ export class BangumiPage extends BasePage implements OnInit {
   limit = 4;
   slice = 6;
   disableLoading = false;
+  infiniteScroll: InfiniteScroll;
+  appConsts = AppConsts
 
   constructor(
     injector: Injector,
@@ -33,7 +35,6 @@ export class BangumiPage extends BasePage implements OnInit {
     public navCtrl: NavController
   ) {
     super(injector);
-    this.imgUrl = `${AppSettings.apiServerUrl}/statics/imgs/`;
   }
 
   ngOnInit(): void {
@@ -91,15 +92,19 @@ export class BangumiPage extends BasePage implements OnInit {
   doRefresh(refresher): void {
     const self = this;
     self.bangumiAnimes = [];
+    if (self.disableLoading) {
+      self.infiniteScroll.enable(true);
+    }
     self.getList(() => {
       refresher.complete();
     });
   }
 
-  loading(infiniteScroll): void {
+  loading(infiniteScroll: InfiniteScroll): void {
     const self = this;
     if (self.disableLoading) {
       infiniteScroll.enable(false);
+      self.infiniteScroll = infiniteScroll;
       console.log('已经到最后');
       return;
     }

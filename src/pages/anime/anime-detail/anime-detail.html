@@ -20,7 +20,7 @@
         <div class="info-item">播放量：{{anime.playCounts}}</div>
         <div class="info-item">订阅人数：{{anime.subCounts}}</div>
         <div class="info-item">
-          <button>订阅</button>
+          <button (click)="subOrUnsub(anime.id)">{{anime.isSubscribed?"取消":"订阅"}}</button>
           <button>继续</button>
         </div>
       </div>

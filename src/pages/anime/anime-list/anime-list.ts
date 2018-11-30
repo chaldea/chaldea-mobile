@@ -1,10 +1,10 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { InfiniteScroll, NavController, NavParams } from 'ionic-angular';
 
-import { AnimeServiceProxy, AnimeOutlineDto } from '../../../shared/service-proxies/service-proxies';
+import { AnimeOutlineDto, AnimeServiceProxy } from '../../../shared/service-proxies/service-proxies';
+import { AppConsts } from '../../../shared/services/settings.service';
 import { BasePage } from '../../base-page';
 import { AnimeDetailPage } from '../anime-detail/anime-detail';
-import { AppSettings } from '../../../shared/services/settings.service';
 
 @Component({
   selector: 'page-anime-list',
@@ -17,6 +17,7 @@ export class AnimeListPage extends BasePage implements OnInit {
   imgUrl = '';
   limit = 12;
   disableLoading = false;
+  infiniteScroll: InfiniteScroll;
 
   constructor(
     injector: Injector,
@@ -25,7 +26,7 @@ export class AnimeListPage extends BasePage implements OnInit {
     public animeServiceProxy: AnimeServiceProxy
   ) {
     super(injector);
-    this.imgUrl = `${AppSettings.apiServerUrl}/statics/imgs/`;
+    this.imgUrl = AppConsts.coverImgUrl;
   }
 
   ngOnInit(): void {
@@ -58,15 +59,19 @@ export class AnimeListPage extends BasePage implements OnInit {
   doRefresh(refresher): void {
     const self = this;
     self.animes = [];
+    if (self.disableLoading) {
+      self.infiniteScroll.enable(true);
+    }
     self.getList(() => {
       refresher.complete();
     });
   }
 
-  loading(infiniteScroll): void {
+  loading(infiniteScroll: InfiniteScroll): void {
     const self = this;
     if (self.disableLoading) {
       infiniteScroll.enable(false);
+      self.infiniteScroll = infiniteScroll;
       console.log('已经到最后');
       return;
     }

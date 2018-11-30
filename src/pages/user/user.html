@@ -11,7 +11,7 @@
     <div *ngIf="isLogin" class="thumbnail">
         <div class="stable">
             <div class="avatar">
-                <img src="./assets/imgs/avatar.jpg" alt="">
+                <img [src]="avatar" alt="">
             </div>
         </div>
         <div class="wrapper">
@@ -37,15 +37,15 @@
             <ion-icon name="md-alarm" item-start [ngStyle]="{'color': '#E63135'}"></ion-icon>
             历史纪录
         </button>
-        <button ion-item icon-start>
+        <button ion-item icon-start (tap)="showFavorite()">
             <ion-icon name="ios-star-outline" item-start [ngStyle]="{'color': '#0CA9EA'}"></ion-icon>
             我的收藏
         </button>
-        <button ion-item icon-start>
+        <button ion-item icon-start (tap)="showAchievement()">
             <ion-icon name="ios-bookmark-outline" item-start [ngStyle]="{'color': '#F46529'}"></ion-icon>
             我的成就
         </button>
-        <button ion-item icon-start>
+        <button ion-item icon-start (tap)="showMessage()">
             <ion-icon name="md-chatboxes" item-start [ngStyle]="{'color': '#FFD439'}"></ion-icon>
             我的消息
         </button>

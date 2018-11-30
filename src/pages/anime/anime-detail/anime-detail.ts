@@ -1,9 +1,9 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
-import { AnimeServiceProxy, AnimeDto } from '../../../shared/service-proxies/service-proxies';
+import { AnimeDto, AnimeServiceProxy, FavoriteServiceProxy } from '../../../shared/service-proxies/service-proxies';
+import { AppConsts } from '../../../shared/services/settings.service';
 import { BasePage } from '../../base-page';
-import { AppSettings } from '../../../shared/services/settings.service';
 
 @Component({
   selector: 'page-anime-detail',
@@ -21,7 +21,8 @@ export class AnimeDetailPage extends BasePage implements OnInit {
     injector: Injector,
     public navCtrl: NavController,
     public navParams: NavParams,
-    public animeServiceProxy: AnimeServiceProxy
+    public animeServiceProxy: AnimeServiceProxy,
+    public favoriteServiceProxy: FavoriteServiceProxy
   ) {
     super(injector);
   }
@@ -32,13 +33,28 @@ export class AnimeDetailPage extends BasePage implements OnInit {
     if (self.animeId) {
       self.animeServiceProxy.getAnime(self.animeId).subscribe((rep) => {
         self.anime = rep;
-        self.coverUrl = `${AppSettings.apiServerUrl}/statics/imgs/${self.anime.cover}`;
+        self.coverUrl = AppConsts.coverImgUrl + self.anime.cover;
         if (self.anime.videos && self.anime.videos.length > 0) {
           self.latest = self.anime.videos[self.anime.videos.length - 1].name;
         }
         if (self.anime.tags && self.anime.tags.length > 0) {
           self.tags = self.anime.tags.join(' ');
         }
+      });
+    }
+  }
+
+  subOrUnsub(animeId: string): void {
+    const self = this;
+    if (self.anime.isSubscribed) {
+      self.favoriteServiceProxy.unSubscribe(animeId).subscribe(() => {
+        self.anime.subCounts = self.anime.subCounts - 1;
+        self.anime.isSubscribed = false;
+      });
+    } else {
+      self.favoriteServiceProxy.subscribe(animeId).subscribe(() => {
+        self.anime.subCounts = self.anime.subCounts + 1;
+        self.anime.isSubscribed = true;
       });
     }
   }

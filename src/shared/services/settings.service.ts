@@ -8,6 +8,14 @@ export class AppSettings {
     static enableCache = true;
 }
 
+export class AppConsts {
+    static imgUrl = `${AppSettings.apiServerUrl}/statics/imgs`;
+    static bannerImgUrl = `${AppConsts.imgUrl}/banner/`;
+    static coverImgUrl = `${AppConsts.imgUrl}/cover/`;
+    static historyImgUrl = `${AppConsts.imgUrl}/history/`;
+    static userImgUrl = `${AppConsts.imgUrl}/user/`;
+}
+
 export class SettingsService {
     public static load(): void {
         const json = localStorage.getItem('settings');

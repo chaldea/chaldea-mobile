@@ -32,6 +32,9 @@ import { AppSettings, SettingsService } from '../shared/services/settings.servic
 import { RefreshTokenHttpInterceptor, TokenService } from '../shared/services/token.service';
 import { MyApp } from './app.component';
 import { TimePipe } from '../shared/services/time.pipe';
+import { FavoritePage } from '../pages/user/favorite/favorite';
+import { AchievementPage } from '../pages/user/achievement/achievement';
+import { MessagePage } from '../pages/user/message/message';
 
 export function getRemoteServiceBaseUrl(): string {
     SettingsService.load();
@@ -56,7 +59,10 @@ export function getRemoteServiceBaseUrl(): string {
         IdServiceSettingPage,
         LoginPage,
         HistoryPage,
-        TimePipe
+        TimePipe,
+        FavoritePage,
+        AchievementPage,
+        MessagePage
     ],
     imports: [
         BrowserModule,
@@ -86,7 +92,10 @@ export function getRemoteServiceBaseUrl(): string {
         ResourceServiceSettingPage,
         IdServiceSettingPage,
         LoginPage,
-        HistoryPage
+        HistoryPage,
+        FavoritePage,
+        AchievementPage,
+        MessagePage
     ],
     providers: [
         StatusBar,

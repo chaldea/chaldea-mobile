@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>我的收藏</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="history-item" *ngFor="let favorite of favorites">
+    <div class="thumbnail" (click)="showAnime(favorite.animeId)">
+      <img-loader [src]="imgUrl + favorite.cover" useImg></img-loader>
+      <div class="ribbon" *ngIf="favorite.currentPlay==undefined || favorite.currentPlay<favorite.lastUpdate">NEW</div>
+    </div>
+    <div class="wrapper">
+      <div class="title">{{favorite.title}}</div>
+      <div class="subtitle">更新到&nbsp;&nbsp;{{favorite.lastUpdate}}</div>
+      <div class="subtitle">{{favorite.currentPlay ? '已看到&nbsp;&nbsp;'+favorite.currentPlay : '尚未观看'}}</div>
+    </div>
+  </div>
+
+  <ion-infinite-scroll (ionInfinite)="loading($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
