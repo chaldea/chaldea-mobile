@@ -9,11 +9,19 @@ export class AppSettings {
 }
 
 export class AppConsts {
-    static imgUrl = `${AppSettings.apiServerUrl}/statics/imgs`;
-    static bannerImgUrl = `${AppConsts.imgUrl}/banner/`;
-    static coverImgUrl = `${AppConsts.imgUrl}/cover/`;
-    static historyImgUrl = `${AppConsts.imgUrl}/history/`;
-    static userImgUrl = `${AppConsts.imgUrl}/user/`;
+    static imgUrl;
+    static bannerImgUrl;
+    static coverImgUrl;
+    static historyImgUrl;
+    static userImgUrl;
+
+    public static set(): void {
+        AppConsts.imgUrl = `${AppSettings.apiServerUrl}/statics/imgs`;
+        AppConsts.bannerImgUrl = `${AppConsts.imgUrl}/banner/`;
+        AppConsts.coverImgUrl = `${AppConsts.imgUrl}/cover/`;
+        AppConsts.historyImgUrl = `${AppConsts.imgUrl}/history/`;
+        AppConsts.userImgUrl = `${AppConsts.imgUrl}/user/`;
+    }
 }
 
 export class SettingsService {
@@ -31,6 +39,7 @@ export class SettingsService {
         } else {
             this.save();
         }
+        AppConsts.set();
     }
 
     public static save(): void {
@@ -41,5 +50,6 @@ export class SettingsService {
             }
         }
         localStorage.setItem('settings', JSON.stringify(item));
+        AppConsts.set();
     }
 }

@@ -11,7 +11,7 @@
 
   <div class="history-item" *ngFor="let history of histories">
     <div class="thumbnail" (click)="showAnime(history.animeId)">
-      <img-loader [src]="imgUrl + history.screenshot" useImg></img-loader>
+      <img-loader [src]="appConsts.historyImgUrl + history.screenshot" useImg></img-loader>
       <span class="time">{{history.currentTime|time}}/{{history.duration|time}}</span>
     </div>
     <div class="wrapper">

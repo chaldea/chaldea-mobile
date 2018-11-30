@@ -11,7 +11,7 @@
 
   <div class="history-item" *ngFor="let favorite of favorites">
     <div class="thumbnail" (click)="showAnime(favorite.animeId)">
-      <img-loader [src]="imgUrl + favorite.cover" useImg></img-loader>
+      <img-loader [src]="appConsts.coverImgUrl + favorite.cover" useImg></img-loader>
       <div class="ribbon" *ngIf="favorite.currentPlay==undefined || favorite.currentPlay<favorite.lastUpdate">NEW</div>
     </div>
     <div class="wrapper">

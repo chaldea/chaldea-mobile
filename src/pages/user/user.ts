@@ -16,7 +16,7 @@ import { MessagePage } from './message/message';
 })
 export class UserPage implements OnDestroy {
     isLogin = false;
-    avatar = AppConsts.userImgUrl + 'avatar.jpg';
+    appConsts = AppConsts;
 
     constructor(
         public injector: Injector,

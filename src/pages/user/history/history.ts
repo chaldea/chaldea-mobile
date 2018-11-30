@@ -11,15 +11,14 @@ import { AnimeDetailPage } from '../../anime/anime-detail/anime-detail';
 })
 export class HistoryPage implements OnInit {
   histories: HistoryDetailDto[] = [];
-  imgUrl: string;
   disableLoading = false;
   infiniteScroll: InfiniteScroll;
+  appConsts = AppConsts;
 
   constructor(
     public navCtrl: NavController,
     public historyServiceProxy: HistoryServiceProxy
   ) {
-    this.imgUrl = AppConsts.historyImgUrl;
   }
 
   ngOnInit(): void {

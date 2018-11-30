@@ -14,10 +14,10 @@ export class AnimeListPage extends BasePage implements OnInit {
   animes: AnimeOutlineDto[] = [];
   bangumiId = '';
   bangumiName = '';
-  imgUrl = '';
   limit = 12;
   disableLoading = false;
   infiniteScroll: InfiniteScroll;
+  appConsts = AppConsts;
 
   constructor(
     injector: Injector,
@@ -26,7 +26,6 @@ export class AnimeListPage extends BasePage implements OnInit {
     public animeServiceProxy: AnimeServiceProxy
   ) {
     super(injector);
-    this.imgUrl = AppConsts.coverImgUrl;
   }
 
   ngOnInit(): void {

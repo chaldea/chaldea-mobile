@@ -11,15 +11,14 @@ import { AnimeDetailPage } from '../../anime/anime-detail/anime-detail';
 })
 export class FavoritePage implements OnInit {
   favorites: FavoriteDto[] = [];
-  imgUrl: string;
   disableLoading = false;
   infiniteScroll: InfiniteScroll;
+  appConsts = AppConsts;
 
   constructor(
     public navCtrl: NavController,
     public favoriteServiceProxy: FavoriteServiceProxy
   ) {
-    this.imgUrl = AppConsts.coverImgUrl;
   }
 
   ngOnInit(): void {
