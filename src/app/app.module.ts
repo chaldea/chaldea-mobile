@@ -35,6 +35,7 @@ import { TimePipe } from '../shared/services/time.pipe';
 import { FavoritePage } from '../pages/user/favorite/favorite';
 import { AchievementPage } from '../pages/user/achievement/achievement';
 import { MessagePage } from '../pages/user/message/message';
+import { FeedbackPage } from '../pages/user/feedback/feedback';
 
 export function getRemoteServiceBaseUrl(): string {
     SettingsService.load();
@@ -62,7 +63,8 @@ export function getRemoteServiceBaseUrl(): string {
         TimePipe,
         FavoritePage,
         AchievementPage,
-        MessagePage
+        MessagePage,
+        FeedbackPage
     ],
     imports: [
         BrowserModule,
@@ -95,7 +97,8 @@ export function getRemoteServiceBaseUrl(): string {
         HistoryPage,
         FavoritePage,
         AchievementPage,
-        MessagePage
+        MessagePage,
+        FeedbackPage
     ],
     providers: [
         StatusBar,

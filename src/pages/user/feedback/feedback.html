@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>意见反馈</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="send()" [disabled]="input.advice==''">
+        发送
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div class="feedback">
+    <textarea placeholder="请输入反馈内容，最多500个字..." [(ngModel)]="input.advice"></textarea>
+    <div class="blank-10"></div>
+    <input type="text" placeholder="请输入您的联系方式(手机号/QQ)" [(ngModel)]="input.contact">
+  </div>
+</ion-content>

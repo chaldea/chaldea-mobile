@@ -816,6 +816,129 @@ export class BannerServiceProxy {
 }
 
 @Injectable()
+export class CommentServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @input (optional) 
+     * @return Success
+     */
+    addComment(input: CommentAddDto | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/comment/addComment";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("put", url_, options_).flatMap((response_ : any) => {
+            return this.processAddComment(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processAddComment(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processAddComment(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
+    }
+
+    /**
+     * @targetId (optional) 
+     * @skip (optional) 
+     * @take (optional) 
+     * @return Success
+     */
+    getComments(targetId: string | null, skip: number | null, take: number | null): Observable<any[]> {
+        let url_ = this.baseUrl + "/api/comment/getComments?";
+        if (targetId !== undefined)
+            url_ += "targetId=" + encodeURIComponent("" + targetId) + "&"; 
+        if (skip !== undefined)
+            url_ += "skip=" + encodeURIComponent("" + skip) + "&"; 
+        if (take !== undefined)
+            url_ += "take=" + encodeURIComponent("" + take) + "&"; 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetComments(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetComments(response_);
+                } catch (e) {
+                    return <Observable<any[]>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<any[]>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetComments(response: HttpResponse<Blob>): Observable<any[]> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && resultData200.constructor === Array) {
+                result200 = [];
+                for (let item of resultData200)
+                    result200.push(item);
+            }
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<any[]>(<any>null);
+    }
+}
+
+@Injectable()
 export class FavoriteServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -979,6 +1102,67 @@ export class FavoriteServiceProxy {
             });
         }
         return Observable.of<FavoriteDto[]>(<any>null);
+    }
+}
+
+@Injectable()
+export class FeedbackServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    /**
+     * @input (optional) 
+     * @return Success
+     */
+    addFeedback(input: FeedbackDto | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/feedback/addFeedback";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(input);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("put", url_, options_).flatMap((response_ : any) => {
+            return this.processAddFeedback(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processAddFeedback(response_);
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processAddFeedback(response: HttpResponse<Blob>): Observable<void> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return Observable.of<void>(<any>null);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<void>(<any>null);
     }
 }
 
@@ -2337,7 +2521,6 @@ export class AnimeDto implements IAnimeDto {
     videos: Resource[] | undefined;
     comics: Resource[] | undefined;
     novels: Resource[] | undefined;
-    comments: string[] | undefined;
     isSubscribed: boolean | undefined;
 
     constructor(data?: IAnimeDto) {
@@ -2383,11 +2566,6 @@ export class AnimeDto implements IAnimeDto {
                 for (let item of data["novels"])
                     this.novels.push(Resource.fromJS(item));
             }
-            if (data["comments"] && data["comments"].constructor === Array) {
-                this.comments = [];
-                for (let item of data["comments"])
-                    this.comments.push(item);
-            }
             this.isSubscribed = data["isSubscribed"];
         }
     }
@@ -2432,11 +2610,6 @@ export class AnimeDto implements IAnimeDto {
             for (let item of this.novels)
                 data["novels"].push(item.toJSON());
         }
-        if (this.comments && this.comments.constructor === Array) {
-            data["comments"] = [];
-            for (let item of this.comments)
-                data["comments"].push(item);
-        }
         data["isSubscribed"] = this.isSubscribed;
         return data; 
     }
@@ -2459,7 +2632,6 @@ export interface IAnimeDto {
     videos: Resource[] | undefined;
     comics: Resource[] | undefined;
     novels: Resource[] | undefined;
-    comments: string[] | undefined;
     isSubscribed: boolean | undefined;
 }
 
@@ -2800,6 +2972,49 @@ export interface IBanner {
     id: string | undefined;
 }
 
+export class CommentAddDto implements ICommentAddDto {
+    targetId: string | undefined;
+    parentId: string | undefined;
+    content: string | undefined;
+
+    constructor(data?: ICommentAddDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.targetId = data["targetId"];
+            this.parentId = data["parentId"];
+            this.content = data["content"];
+        }
+    }
+
+    static fromJS(data: any): CommentAddDto {
+        let result = new CommentAddDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["targetId"] = this.targetId;
+        data["parentId"] = this.parentId;
+        data["content"] = this.content;
+        return data; 
+    }
+}
+
+export interface ICommentAddDto {
+    targetId: string | undefined;
+    parentId: string | undefined;
+    content: string | undefined;
+}
+
 export class FavoriteDto implements IFavoriteDto {
     id: string | undefined;
     title: string | undefined;
@@ -2853,6 +3068,45 @@ export interface IFavoriteDto {
     lastUpdate: string | undefined;
     currentPlay: string | undefined;
     animeId: string | undefined;
+}
+
+export class FeedbackDto implements IFeedbackDto {
+    contact: string | undefined;
+    advice: string | undefined;
+
+    constructor(data?: IFeedbackDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.contact = data["contact"];
+            this.advice = data["advice"];
+        }
+    }
+
+    static fromJS(data: any): FeedbackDto {
+        let result = new FeedbackDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["contact"] = this.contact;
+        data["advice"] = this.advice;
+        return data; 
+    }
+}
+
+export interface IFeedbackDto {
+    contact: string | undefined;
+    advice: string | undefined;
 }
 
 export class HistoryDto implements IHistoryDto {

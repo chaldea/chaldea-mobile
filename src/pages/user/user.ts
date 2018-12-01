@@ -1,14 +1,15 @@
 import { Component, Injector, OnDestroy } from '@angular/core';
 import { AlertController, Events, ModalController, NavController } from 'ionic-angular';
 
+import { AppConsts } from '../../shared/services/settings.service';
 import { TokenService } from '../../shared/services/token.service';
+import { AchievementPage } from './achievement/achievement';
+import { FavoritePage } from './favorite/favorite';
+import { FeedbackPage } from './feedback/feedback';
 import { HistoryPage } from './history/history';
 import { LoginPage } from './login/login';
-import { SettingsPage } from './settings/settings';
-import { AppConsts } from '../../shared/services/settings.service';
-import { FavoritePage } from './favorite/favorite';
-import { AchievementPage } from './achievement/achievement';
 import { MessagePage } from './message/message';
+import { SettingsPage } from './settings/settings';
 
 @Component({
     selector: 'page-user',
@@ -54,6 +55,10 @@ export class UserPage implements OnDestroy {
 
     showSettings(): void {
         this.navCtrl.push(SettingsPage);
+    }
+
+    showFeedback(): void {
+        this.navCtrl.push(FeedbackPage);
     }
 
     register(): void {

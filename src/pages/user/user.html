@@ -56,7 +56,7 @@
             <ion-icon name="ios-cog" item-start [ngStyle]="{'color': '#CE6296'}"></ion-icon>
             系统设置
         </button>
-        <button ion-item icon-start>
+        <button ion-item icon-start (tap)="showFeedback()">
             <ion-icon name="ios-create-outline" item-start [ngStyle]="{'color': '#78BD43'}"></ion-icon>
             意见反馈
         </button>

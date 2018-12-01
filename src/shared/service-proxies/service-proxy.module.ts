@@ -7,10 +7,12 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.AnimeServiceProxy,
         ApiServiceProxies.BangumiServiceProxy,
         ApiServiceProxies.BannerServiceProxy,
-        ApiServiceProxies.VideoServiceProxy,
-        ApiServiceProxies.NodeServiceProxy,
+        ApiServiceProxies.CommentServiceProxy,
+        ApiServiceProxies.FavoriteServiceProxy,
+        ApiServiceProxies.FeedbackServiceProxy,
         ApiServiceProxies.HistoryServiceProxy,
-        ApiServiceProxies.FavoriteServiceProxy
+        ApiServiceProxies.NodeServiceProxy,
+        ApiServiceProxies.VideoServiceProxy
     ]
 })
 export class ServiceProxyModule { }
