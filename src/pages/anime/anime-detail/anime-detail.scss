@@ -2,6 +2,9 @@ page-anime-detail {
     ion-segment {
         background-color: $content-bg-color;
     }
+    ion-footer {
+        height: 50px;
+    }
     .scroll-content {
         background-color: $page-bg-color;
     }
@@ -53,7 +56,7 @@ page-anime-detail {
     }
     .reply {
         width: 100%;
-        height: 30px;
+        height: 50px;
         background-color: #fafafa;
         display: flex;
         flex-direction: row;
@@ -79,7 +82,7 @@ page-anime-detail {
                 -webkit-appearance: none;
                 border-radius: 10px;
                 width: 100%;
-                padding: 2px 5px;
+                padding: 5px;
                 border: 1px solid #e5e5e5;
                 background-color: #f4f4f4;
             }

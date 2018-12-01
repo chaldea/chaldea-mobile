@@ -48,7 +48,11 @@
   <app-novel #novelPage *ngIf="segment=='novel-page'"></app-novel>
 
   <div class="blank-10"></div>
-  <app-comment #commentPage></app-comment>
+  <app-comment #commentPage [items]="comments"></app-comment>
+
+  <ion-infinite-scroll (ionInfinite)="loading($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
 
 <ion-footer>
@@ -57,10 +61,10 @@
       <ion-icon ios="ios-happy" md="md-happy"></ion-icon>
     </div>
     <div class="middle">
-      <input type="text" placeholder="说点什么吧" />
+      <input type="text" placeholder="说点什么吧" [(ngModel)]="commentInput.content" />
     </div>
     <div class="right">
-      <ion-icon ios="ios-send" md="md-send"></ion-icon>
+      <ion-icon ios="ios-send" md="md-send" (tap)="sendComment()"></ion-icon>
     </div>
   </div>
 </ion-footer>

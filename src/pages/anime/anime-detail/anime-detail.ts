@@ -1,7 +1,14 @@
 import { Component, Injector, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, InfiniteScroll } from 'ionic-angular';
 
-import { AnimeDto, AnimeServiceProxy, FavoriteServiceProxy } from '../../../shared/service-proxies/service-proxies';
+import {
+  AnimeDto,
+  AnimeServiceProxy,
+  CommentAddDto,
+  CommentDto,
+  CommentServiceProxy,
+  FavoriteServiceProxy
+} from '../../../shared/service-proxies/service-proxies';
 import { AppConsts } from '../../../shared/services/settings.service';
 import { BasePage } from '../../base-page';
 
@@ -16,13 +23,18 @@ export class AnimeDetailPage extends BasePage implements OnInit {
   coverUrl: string;
   latest: string;
   tags: string;
+  comments: CommentDto[] = [];
+  commentInput: CommentAddDto = new CommentAddDto();
+  disableLoading = false;
+  infiniteScroll: InfiniteScroll;
 
   constructor(
     injector: Injector,
     public navCtrl: NavController,
     public navParams: NavParams,
     public animeServiceProxy: AnimeServiceProxy,
-    public favoriteServiceProxy: FavoriteServiceProxy
+    public favoriteServiceProxy: FavoriteServiceProxy,
+    public commentServiceProxy: CommentServiceProxy
   ) {
     super(injector);
   }
@@ -41,6 +53,7 @@ export class AnimeDetailPage extends BasePage implements OnInit {
           self.tags = self.anime.tags.join(' ');
         }
       });
+      self.getComments();
     }
   }
 
@@ -57,5 +70,58 @@ export class AnimeDetailPage extends BasePage implements OnInit {
         self.anime.isSubscribed = true;
       });
     }
+  }
+
+  getComments(callback?: () => void): void {
+    const self = this;
+    self.commentServiceProxy.getComments(self.animeId, self.comments.length, 6)
+      .subscribe((rep) => {
+        if (rep && rep.length > 0) {
+          self.disableLoading = false;
+          self.comments = self.comments.concat(rep);
+        }
+        else {
+          self.disableLoading = true;
+        }
+        if (callback) callback();
+      });
+  }
+
+  sendComment(): void {
+    const self = this;
+    if (!self.commentInput.content || self.commentInput.content == '') {
+      return;
+    }
+    self.commentInput.targetId = self.animeId;
+    self.commentServiceProxy.addComment(self.commentInput).subscribe(() => {
+      self.doRefresh();
+    });
+  }
+
+  doRefresh(refresher?: any): void {
+    const self = this;
+    self.comments = [];
+    if (self.disableLoading) {
+      self.infiniteScroll.enable(true);
+    }
+    self.getComments(() => {
+      if (refresher) {
+        refresher.complete();
+      }
+    });
+  }
+
+  loading(infiniteScroll: InfiniteScroll): void {
+    const self = this;
+    if (self.disableLoading) {
+      infiniteScroll.enable(false);
+      self.infiniteScroll = infiniteScroll;
+      console.log('已经到最后');
+      return;
+    }
+    self.getComments(() => {
+      console.log('loading...');
+      infiniteScroll.complete();
+    });
   }
 }

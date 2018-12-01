@@ -1,29 +1,29 @@
 <div>
   <div class="comment">
     <div class="title">评论区</div>
-    <div class="thumbnail" *ngFor="let item of items">
+    <div class="thumbnail" *ngFor="let item of items; let i = index">
       <div class="stable">
         <div class="avatar">
-          <img src="./assets/imgs/avatar.jpg" alt="">
+          <img [src]="appConsts.userImgUrl + item.avatar" alt="">
         </div>
       </div>
       <div class="wrapper">
         <div class="header">
-          <div class="auth">{{item.auth}}</div>
-          <div class="level">#{{item.level}}</div>
-          <div class="date">{{item.date}}</div>
+          <div class="auth">{{item.userName}}</div>
+          <div class="level">#{{items.length - i}}</div>
+          <div class="date">{{item.creationTime|date:'yyyy-MM-dd'}}</div>
         </div>
         <div class="comment-content">
-          {{item.comment}}
+          {{item.content}}
         </div>
         <div class="footer">
           <div class="tip">
             <ion-icon ios="ios-chatbubbles-outline" md="ios-chatbubbles-outline"></ion-icon>
-            20
+            {{item.replies.length}}
           </div>
           <div class="tip">
             <ion-icon ios="md-thumbs-up" md="md-thumbs-up"></ion-icon>
-            1005
+            {{item.likes.length}}
           </div>
           <div class="tip">
             <ion-icon ios="md-thumbs-down" md="md-thumbs-down"></ion-icon>

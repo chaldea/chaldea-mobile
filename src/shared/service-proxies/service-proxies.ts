@@ -881,7 +881,7 @@ export class CommentServiceProxy {
      * @take (optional) 
      * @return Success
      */
-    getComments(targetId: string | null, skip: number | null, take: number | null): Observable<any[]> {
+    getComments(targetId: string | null, skip: number | null, take: number | null): Observable<CommentDto[]> {
         let url_ = this.baseUrl + "/api/comment/getComments?";
         if (targetId !== undefined)
             url_ += "targetId=" + encodeURIComponent("" + targetId) + "&"; 
@@ -907,14 +907,14 @@ export class CommentServiceProxy {
                 try {
                     return this.processGetComments(response_);
                 } catch (e) {
-                    return <Observable<any[]>><any>Observable.throw(e);
+                    return <Observable<CommentDto[]>><any>Observable.throw(e);
                 }
             } else
-                return <Observable<any[]>><any>Observable.throw(response_);
+                return <Observable<CommentDto[]>><any>Observable.throw(response_);
         });
     }
 
-    protected processGetComments(response: HttpResponse<Blob>): Observable<any[]> {
+    protected processGetComments(response: HttpResponse<Blob>): Observable<CommentDto[]> {
         const status = response.status; 
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -925,7 +925,7 @@ export class CommentServiceProxy {
             if (resultData200 && resultData200.constructor === Array) {
                 result200 = [];
                 for (let item of resultData200)
-                    result200.push(item);
+                    result200.push(CommentDto.fromJS(item));
             }
             return Observable.of(result200);
             });
@@ -934,7 +934,7 @@ export class CommentServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Observable.of<any[]>(<any>null);
+        return Observable.of<CommentDto[]>(<any>null);
     }
 }
 
@@ -3013,6 +3013,101 @@ export interface ICommentAddDto {
     targetId: string | undefined;
     parentId: string | undefined;
     content: string | undefined;
+}
+
+export class CommentDto implements ICommentDto {
+    creationTime: moment.Moment | undefined;
+    replies: CommentDto[] | undefined;
+    likes: string[] | undefined;
+    unlikes: string[] | undefined;
+    index: number | undefined;
+    content: string | undefined;
+    avatar: string | undefined;
+    userName: string | undefined;
+    userId: string | undefined;
+    id: string | undefined;
+
+    constructor(data?: ICommentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : <any>undefined;
+            if (data["replies"] && data["replies"].constructor === Array) {
+                this.replies = [];
+                for (let item of data["replies"])
+                    this.replies.push(CommentDto.fromJS(item));
+            }
+            if (data["likes"] && data["likes"].constructor === Array) {
+                this.likes = [];
+                for (let item of data["likes"])
+                    this.likes.push(item);
+            }
+            if (data["unlikes"] && data["unlikes"].constructor === Array) {
+                this.unlikes = [];
+                for (let item of data["unlikes"])
+                    this.unlikes.push(item);
+            }
+            this.index = data["index"];
+            this.content = data["content"];
+            this.avatar = data["avatar"];
+            this.userName = data["userName"];
+            this.userId = data["userId"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): CommentDto {
+        let result = new CommentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        if (this.replies && this.replies.constructor === Array) {
+            data["replies"] = [];
+            for (let item of this.replies)
+                data["replies"].push(item.toJSON());
+        }
+        if (this.likes && this.likes.constructor === Array) {
+            data["likes"] = [];
+            for (let item of this.likes)
+                data["likes"].push(item);
+        }
+        if (this.unlikes && this.unlikes.constructor === Array) {
+            data["unlikes"] = [];
+            for (let item of this.unlikes)
+                data["unlikes"].push(item);
+        }
+        data["index"] = this.index;
+        data["content"] = this.content;
+        data["avatar"] = this.avatar;
+        data["userName"] = this.userName;
+        data["userId"] = this.userId;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface ICommentDto {
+    creationTime: moment.Moment | undefined;
+    replies: CommentDto[] | undefined;
+    likes: string[] | undefined;
+    unlikes: string[] | undefined;
+    index: number | undefined;
+    content: string | undefined;
+    avatar: string | undefined;
+    userName: string | undefined;
+    userId: string | undefined;
+    id: string | undefined;
 }
 
 export class FavoriteDto implements IFavoriteDto {
