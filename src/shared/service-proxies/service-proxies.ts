@@ -2349,6 +2349,55 @@ export class UserServiceProxy {
         }
         return Observable.of<DropdownItem[]>(<any>null);
     }
+
+    /**
+     * @return Success
+     */
+    getUserDetail(): Observable<UserDetailDto> {
+        let url_ = this.baseUrl + "/api/user/getUserDetail";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).flatMap((response_ : any) => {
+            return this.processGetUserDetail(response_);
+        }).catch((response_: any) => {
+            if (response_ instanceof HttpResponse) {
+                try {
+                    return this.processGetUserDetail(response_);
+                } catch (e) {
+                    return <Observable<UserDetailDto>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<UserDetailDto>><any>Observable.throw(response_);
+        });
+    }
+
+    protected processGetUserDetail(response: HttpResponse<Blob>): Observable<UserDetailDto> {
+        const status = response.status; 
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(response.body).flatMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? UserDetailDto.fromJS(resultData200) : new UserDetailDto();
+            return Observable.of(result200);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(response.body).flatMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Observable.of<UserDetailDto>(<any>null);
+    }
 }
 
 @Injectable()
@@ -3888,6 +3937,73 @@ export interface IUserDto {
     email: string | undefined;
     phoneNumber: string | undefined;
     name: string | undefined;
+    id: string | undefined;
+}
+
+export class UserDetailDto implements IUserDetailDto {
+    favorites: number | undefined;
+    achievements: number | undefined;
+    birthDate: moment.Moment | undefined;
+    signature: string | undefined;
+    gender: string | undefined;
+    role: string | undefined;
+    nickName: string | undefined;
+    avatar: string | undefined;
+    id: string | undefined;
+
+    constructor(data?: IUserDetailDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.favorites = data["favorites"];
+            this.achievements = data["achievements"];
+            this.birthDate = data["birthDate"] ? moment(data["birthDate"].toString()) : <any>undefined;
+            this.signature = data["signature"];
+            this.gender = data["gender"];
+            this.role = data["role"];
+            this.nickName = data["nickName"];
+            this.avatar = data["avatar"];
+            this.id = data["id"];
+        }
+    }
+
+    static fromJS(data: any): UserDetailDto {
+        let result = new UserDetailDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["favorites"] = this.favorites;
+        data["achievements"] = this.achievements;
+        data["birthDate"] = this.birthDate ? this.birthDate.toISOString() : <any>undefined;
+        data["signature"] = this.signature;
+        data["gender"] = this.gender;
+        data["role"] = this.role;
+        data["nickName"] = this.nickName;
+        data["avatar"] = this.avatar;
+        data["id"] = this.id;
+        return data; 
+    }
+}
+
+export interface IUserDetailDto {
+    favorites: number | undefined;
+    achievements: number | undefined;
+    birthDate: moment.Moment | undefined;
+    signature: string | undefined;
+    gender: string | undefined;
+    role: string | undefined;
+    nickName: string | undefined;
+    avatar: string | undefined;
     id: string | undefined;
 }
 

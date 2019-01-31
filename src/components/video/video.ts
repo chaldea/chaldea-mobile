@@ -46,9 +46,11 @@ export class VideoComponent extends BaseComponent implements OnInit, OnDestroy {
         if (rep && rep.length > 0) {
           rep.forEach((item, i) => {
             const res = self.resources.find(x => x.id === item.resourceId);
-            res['visited'] = true;
-            if (i === rep.length - 1) {
-              self.selected = res;
+            if (res) {
+              res['visited'] = true;
+              if (i === rep.length - 1) {
+                self.selected = res;
+              }
             }
           });
         }

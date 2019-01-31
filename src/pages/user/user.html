@@ -11,14 +11,14 @@
     <div *ngIf="isLogin" class="thumbnail">
         <div class="stable">
             <div class="avatar">
-                <img [src]="appConsts.userImgUrl + 'avatar.jpg'" alt="">
+                <img [src]="appConsts.userImgUrl + user.avatar" alt="">
             </div>
         </div>
         <div class="wrapper">
-            <div class="user-name">最终的阿瓦隆</div>
+            <div class="user-name">{{user.nickName}}</div>
             <div class="count">
-                <div>关注：10</div>
-                <div>成就：110</div>
+                <div>关注：{{user.favorites}}</div>
+                <div>成就：{{user.achievements}}</div>
             </div>
         </div>
     </div>

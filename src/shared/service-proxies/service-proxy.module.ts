@@ -12,6 +12,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.FeedbackServiceProxy,
         ApiServiceProxies.HistoryServiceProxy,
         ApiServiceProxies.NodeServiceProxy,
+        ApiServiceProxies.UserServiceProxy,
         ApiServiceProxies.VideoServiceProxy
     ]
 })

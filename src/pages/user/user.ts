@@ -1,6 +1,7 @@
-import { Component, Injector, OnDestroy } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { AlertController, Events, ModalController, NavController } from 'ionic-angular';
 
+import { UserServiceProxy, UserDetailDto } from '../../shared/service-proxies/service-proxies';
 import { AppConsts } from '../../shared/services/settings.service';
 import { TokenService } from '../../shared/services/token.service';
 import { AchievementPage } from './achievement/achievement';
@@ -10,14 +11,15 @@ import { HistoryPage } from './history/history';
 import { LoginPage } from './login/login';
 import { MessagePage } from './message/message';
 import { SettingsPage } from './settings/settings';
+import { BasePage } from '../base-page';
 
 @Component({
     selector: 'page-user',
     templateUrl: 'user.html'
 })
-export class UserPage implements OnDestroy {
-    isLogin = false;
+export class UserPage extends BasePage implements OnDestroy, OnInit {
     appConsts = AppConsts;
+    user: UserDetailDto = new UserDetailDto();
 
     constructor(
         public injector: Injector,
@@ -25,16 +27,31 @@ export class UserPage implements OnDestroy {
         public navCtrl: NavController,
         public modalCtrl: ModalController,
         public alertCtrl: AlertController,
-        public tokenService: TokenService
+        public tokenService: TokenService,
+        public userServiceProxy: UserServiceProxy
     ) {
+        super(injector);
         events.subscribe('logined', (arg) => {
             this.isLogin = arg;
+            this.getUserDetail();
         });
-        this.isLogin = tokenService.hasToken();
+    }
+
+    ngOnInit(): void {
+        if (this.isLogin) {
+            this.getUserDetail();
+        }
     }
 
     ngOnDestroy(): void {
         this.events.unsubscribe('logined');
+    }
+
+    getUserDetail(): void {
+        this.userServiceProxy.getUserDetail().subscribe((rep) => {
+            this.user = rep;
+            console.log(rep);
+        });
     }
 
     showHistory(): void {
